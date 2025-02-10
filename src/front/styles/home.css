@@ -5,3 +5,23 @@
     one more css for each page that will contain the selected used 
     on that page only (the ones not reused in other pages).
 */
+.boton-signup {
+    background-color: #112D4E;
+    color: #fff;
+    margin-right: 10px;
+}
+.boton-signup:hover {
+    background-color: #fff;
+    color: #112D4E;
+    border-color: #112D4E;
+}
+.boton-login {
+    background-color: #fff;
+    border-color: #112D4E;
+    margin-right: 10px;
+}
+.boton-login:hover {
+    background-color: #112D4E;
+    color: #fff;
+    border-color: #fff;
+}
