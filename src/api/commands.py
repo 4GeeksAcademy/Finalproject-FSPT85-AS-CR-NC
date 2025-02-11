@@ -1,6 +1,8 @@
 
 import click
-from api.models import db, Usuario
+from api.models import db, Usuario, Vehiculo, Reserva
+from flask import Flask
+from datetime import datetime, timedelta
 
 """
 In this file, you can add as many commands as you want using the @app.cli.command decorator
@@ -19,16 +21,62 @@ def setup_commands(app):
     def insert_test_users(count):
         print("Creating test users")
         for x in range(1, int(count) + 1):
-            user = Usuario()
-            user.email = "test_user" + str(x) + "@test.com"
-            user.password = "123456"
-            user.is_active = True
+            user = Usuario(
+                email=f"test_user{x}@test.com",
+                contraseña="123456", 
+                nombre=f"Usuario{x}",
+                apellidos="Test",
+                direccion="Calle Falsa 123",
+                poblacion="Madrid",
+                telefono="600123456",
+                fecha_nacimiento=datetime(1990, 1, 1),
+                fecha_obtencion_carnet=datetime(2010, 5, 20)
+            )
             db.session.add(user)
             db.session.commit()
-            print("User: ", user.email, " created.")
+            print(f"{count} usuarios de prueba creados.")
 
-        print("All test users created")
+    @app.cli.command("insert-test-vehiculos")
+    def insert_test_vehiculos():
+        print("Creating test vehiculos")
+        vehiculos = [
+            Vehiculo(marca="Toyota", modelo="Corolla", potencia="120 CV", plazas=5, combustible="Gasolina",
+                     autonomia="700 km", foto="url_foto_1", año=2022, precio_por_dia=50.0),
+            Vehiculo(marca="Ford", modelo="Focus", potencia="150 CV", plazas=5, combustible="Diesel",
+                     autonomia="800 km", foto="url_foto_2", año=2021, precio_por_dia=45.0),
+        ]
+        db.session.add_all(vehiculos)
+        db.session.commit()
+        print("Vehículos de prueba creados.")
+
+
+    @app.cli.command("insert-test-reservas")
+    def insert_test_reservas():
+        print("Creating test reservas")
+        usuario = Usuario.query.first() 
+        vehiculo = Vehiculo.query.first() 
+        
+        if not usuario or not vehiculo:
+            print("No hay usuarios o vehículos en la base de datos.")
+            return
+        
+        reserva = Reserva(
+            usuario_id=usuario.id,
+            vehiculo_id=vehiculo.id,
+            fecha_inicio=datetime.now(),
+            fecha_fin=datetime.now() + timedelta(days=5),
+            destino="Barcelona",
+            estado="pendiente"
+        )
+        db.session.add(reserva)
+        db.session.commit()
+        print("Reserva de prueba creada.")
+
 
     @app.cli.command("insert-test-data")
     def insert_test_data():
-        pass
+        """ Inserta usuarios, vehículos y reservas de prueba en una sola ejecución """
+        insert_test_users("3")
+        insert_test_vehiculos()
+        insert_test_reservas()
+        print("Base de datos poblada con datos de prueba.")
