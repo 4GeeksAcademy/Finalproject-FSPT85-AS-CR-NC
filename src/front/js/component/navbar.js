@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Context } from "../store/appContext";
 
 export const Navbar = () => {
-    const { store, actions } = useContext(Context);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -11,35 +10,51 @@ export const Navbar = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) {
-            // Verifica autenticación solo si hay un token
-            actions.verifyAuth();
-        }
+        setIsAuthenticated(!!token);
     }, []);
 
     const handleAuth = async (e) => {
         e.preventDefault();
         setErrorMessage("");
 
-        const success = await actions.loginUser(email, password);
-        if (success) {
+        try {
+            const response = await fetch("https://probable-memory-wr9j95jq65rwh59xg-3001.app.github.dev//login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, contraseña: password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.msg || "Error en el login");
+            }
+
+            localStorage.setItem("token", data.access_token);
+            setIsAuthenticated(true);
             setEmail("");
             setPassword("");
-            
-            // Cierra el modal correctamente
+
+            // Cierra el modal
             const modalElement = document.getElementById("loginModal");
             const modal = bootstrap.Modal.getInstance(modalElement);
-            if (modal) modal.hide();
-        } else {
-            setErrorMessage("Error en el login");
+            modal.hide();
+        } catch (error) {
+            setErrorMessage(error.message);
         }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        navigate("/");
     };
 
     return (
         <>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
-                    <a className="navbar-brand text-secondary-emphasis fs-6 fw-bold text-reset" href="#" onClick={() => navigate("/")}>@4Cars</a>
+                    <a className="navbar-brand text-secondary-emphasis fs-6 fw-bold text-reset" href="#">@4Cars</a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -48,29 +63,29 @@ export const Navbar = () => {
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Vehículos</a>
                                 <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="#">Vehículo 1</a></li>
-                                    <li><a className="dropdown-item" href="#">Vehículo 2</a></li>
-                                    <li><a className="dropdown-item" href="#">Vehículo 3</a></li>
+								<ul className="dropdown-menu">
+							{vehiculos.map((vehiculo) => (
+								<li key={vehiculo.id}>
+									<Link className="dropdown-item" to={`/vehicle/${vehiculo.id}`}>
+									{vehiculo.marca} {vehiculo.modelo}
+									</Link>
+								</li>
+							))}
+						</ul>
                                 </ul>
                             </li>
                             <li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
                             <li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>
                         </ul>
-                        {!store.isAuthenticated && (
-                            <button
-                                type="button"
-                                className="btn boton-signup"
-                                onClick={() => navigate("/register")}
-                            >
-                                Signup
-                            </button>
+                        {!isAuthenticated && (
+                            <button type="button" className="btn boton-signup">Signup</button>
                         )}
-                        {store.isAuthenticated ? (
+                        {isAuthenticated ? (
                             <button
                                 type="button"
                                 className="btn"
                                 style={{ backgroundColor: "#B22222", color: "white" }}
-                                onClick={() => { actions.logoutUser(); alert('Has cerrado sesión correctamente.'); }}
+                                onClick={handleLogout}
                             >
                                 Logout
                             </button>
