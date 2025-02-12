@@ -1,17 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom"; 
 
 export const Navbar = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+	const [vehiculos, setVehiculos] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         setIsAuthenticated(!!token);
     }, []);
+
+	useEffect(() => {
+		const fetchVehicles = async () => {
+			try {
+				const reponse = await fetch("https://psychic-cod-5g7vr7qxp5ghx9p-3001.app.github.dev/api/vehicles");
+				const data = await reponse.json();
+				setVehiculos(data);
+			} catch (error) {
+				console.error("Error al obtener los vehiculos", error);
+			}
+		};
+
+		fetchVehicles();
+	}, []);
 
     const handleAuth = async (e) => {
         e.preventDefault();
