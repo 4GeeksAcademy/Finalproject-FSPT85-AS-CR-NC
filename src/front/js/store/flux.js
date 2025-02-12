@@ -14,7 +14,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			],
-			vehicles: []
+			vehicles: [],
+			selectedVehicle: null
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -55,6 +56,19 @@ const getState = ({ getStore, getActions, setStore }) => {
                     setStore({ vehicles: data }); // Guardar los datos en el store
                 } catch (error) {
                     console.log("Error fetching vehicles from backend", error);
+                }
+            },
+            fetchVehicleById: async (vehicleId) => {
+                try {
+                    const resp = await fetch(`${process.env.BACKEND_URL}/api/vehicles/${vehicleId}`);
+                    if (!resp.ok) {
+                        throw new Error("Vehicle not found");
+                    }
+                    const data = await resp.json();
+                    setStore({ selectedVehicle: data });
+                } catch (error) {
+                    console.log("Error fetching vehicle by ID", error);
+                    setStore({ selectedVehicle: null });
                 }
             }
 		}
