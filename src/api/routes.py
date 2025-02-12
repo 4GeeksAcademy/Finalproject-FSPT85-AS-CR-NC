@@ -31,3 +31,17 @@ def get_vehicles():
         return jsonify(serialized_vehicles), 200
     except Exception as e:
         return jsonify({"error": "Failed to fetch vehicles", "details": str(e)}), 500
+    
+@api.route('/vehicles/<int:vehicle_id>', methods=['GET'])
+def get_vehicle(vehicle_id):
+    try:
+        # Consulta el vehículo por su ID
+        vehicle = Vehiculo.query.get(vehicle_id)
+        
+        if not vehicle:
+            return jsonify({"error": "Vehicle not found"}), 404
+        
+        # Serializa y devuelve el vehículo
+        return jsonify(vehicle.serialize()), 200
+    except Exception as e:
+        return jsonify({"error": "Failed to fetch vehicle", "details": str(e)}), 500
