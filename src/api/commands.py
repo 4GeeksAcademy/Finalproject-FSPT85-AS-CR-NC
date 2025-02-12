@@ -1,4 +1,3 @@
-
 import click
 from api.models import db, Usuario, Vehiculo, Reserva
 from flask import Flask
@@ -40,10 +39,28 @@ def setup_commands(app):
     def insert_test_vehiculos():
         print("Creating test vehiculos")
         vehiculos = [
-            Vehiculo(marca="Toyota", modelo="Corolla", potencia="120 CV", plazas=5, combustible="Gasolina",
-                     autonomia="700 km", foto="url_foto_1", año=2022, precio_por_dia=50.0),
-            Vehiculo(marca="Ford", modelo="Focus", potencia="150 CV", plazas=5, combustible="Diesel",
-                     autonomia="800 km", foto="url_foto_2", año=2021, precio_por_dia=45.0),
+            #Turismos
+            Vehiculo(marca="Volkswagen", modelo="Golf", potencia="150 CV", plazas=5, combustible="Diesel",
+                     autonomia="850 km", foto="url_foto_1", año=2022, precio_por_dia=35.0),
+            Vehiculo(marca="Toyota", modelo="Corolla Hybrid", potencia="140 CV", plazas=5, combustible="Híbrido",
+                     autonomia="900 km", foto="url_foto_3", año=2023, precio_por_dia=35.0),
+            Vehiculo(marca="Renault", modelo="Zoe", potencia="110 CV", plazas=5, combustible="Eléctrico",
+                     autonomia="400 km", foto="url_foto_3", año=2023, precio_por_dia=30.0),
+            #Sedan/Berlinas
+            Vehiculo(marca="BMW", modelo="Serie 3", potencia="286 CV", plazas=5, combustible="Diesel",
+                     autonomia="950 km", foto="url_foto_2", año=2022, precio_por_dia=40.0),
+            Vehiculo(marca="Hyundai", modelo="Ioniq Hybrid", potencia="141 CV", plazas=5, combustible="Híbrido",
+                     autonomia="1000 km", foto="url_foto_3", año=2023, precio_por_dia=40.0),
+            Vehiculo(marca="Tesla", modelo="Model 3", potencia="283 CV", plazas=5, combustible="Eléctrico",
+                     autonomia="600 km", foto="url_foto_3", año=2023, precio_por_dia=40.0),
+            #Furgonetas
+            Vehiculo(marca="Ford", modelo="Transit Custom", potencia="170 CV", plazas=9, combustible="Diesel",
+                     autonomia="850 km", foto="url_foto_3", año=2023, precio_por_dia=45.0),
+            Vehiculo(marca="Toyota", modelo="Proace Verso Hibryd", potencia="180 CV", plazas=9, combustible="Híbrido",
+                     autonomia="900 km", foto="url_foto_3", año=2022, precio_por_dia=45.0),
+            Vehiculo(marca="Mercedes-Benz", modelo="eVito Tourer", potencia="283 CV", plazas=8, combustible="Eléctrico",
+                     autonomia="370 km", foto="url_foto_3", año=2023, precio_por_dia=40.0),
+
         ]
         db.session.add_all(vehiculos)
         db.session.commit()
