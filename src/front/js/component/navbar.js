@@ -34,8 +34,8 @@ export const Navbar = () => {
 					<input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
 					{/* <button className="btn btn-outline-success" type="submit">Search</button> */}
 				</form>
-				<button type="button" class="btn boton-signup">Signup</button>
-				<button type="button" class="btn boton-login">Login</button>
+				<button type="button" className="btn boton-signup">Signup</button>
+				<button type="button" className="btn boton-login">Login</button>
 				</div>
 			</div>
 		</nav>
