@@ -1,59 +1,29 @@
 const getState = ({ getStore, getActions, setStore }) => {
-	return {
-		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
-			vehicles: [],
-			selectedVehicle: null
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			// exampleFunction: () => {
-			// 	getActions().changeColor(0, "green");
-			// },
-
-			// getMessage: async () => {
-			// 	try{
-			// 		// fetching data from the backend
-			// 		const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-			// 		const data = await resp.json()
-			// 		setStore({ message: data.message })
-			// 		// don't forget to return something, that is how the async resolves
-			// 		return data;
-			// 	}catch(error){
-			// 		console.log("Error loading message from backend", error)
-			// 	}
-			// },
-			// changeColor: (index, color) => {
-			// 	//get the store
-			// 	const store = getStore();
-
-			// 	//we have to loop the entire demo array to look for the respective index
-			// 	//and change its color
-			// 	const demo = store.demo.map((elm, i) => {
-			// 		if (i === index) elm.background = color;
-			// 		return elm;
-			// 	});
-
-			// 	//reset the global store
-			// 	setStore({ demo: demo });
-			// },
-			fetchVehicles: async () => {
+    return {
+        store: {
+            message: null,
+            demo: [
+                {
+                    title: "FIRST",
+                    background: "white",
+                    initial: "white"
+                },
+                {
+                    title: "SECOND",
+                    background: "white",
+                    initial: "white"
+                }
+            ],
+            vehicles: [],
+            selectedVehicle: null,
+            isAuthenticated: false
+        },
+        actions: {
+            fetchVehicles: async () => {
                 try {
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/vehicles"); // Llamada a la API de vehículos
+                    const resp = await fetch(process.env.BACKEND_URL + "/api/vehicles");
                     const data = await resp.json();
-                    setStore({ vehicles: data }); // Guardar los datos en el store
+                    setStore({ vehicles: data });
                 } catch (error) {
                     console.log("Error fetching vehicles from backend", error);
                 }
@@ -70,9 +40,60 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.log("Error fetching vehicle by ID", error);
                     setStore({ selectedVehicle: null });
                 }
+            },
+            registerUser: async (userData) => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/signup`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(userData)
+                    });
+                    
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.msg || "Error en el registro");
+                    }
+                    alert("Usuario registrado exitosamente");
+                    return true;
+                } catch (error) {
+                    alert(error.message);
+                    return false;
+                }
+            },
+            loginUser: async (email, contraseña) => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/login`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email, contraseña }),
+                        credentials: "omit" 
+                    });
+                    
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.msg || "Error en el login");
+                    }
+                    
+                    localStorage.setItem("token", data.access_token);
+                    setStore({ isAuthenticated: true });
+                    return true;
+                } catch (error) {
+                    alert(error.message);
+                    return false;
+                }
+            },
+            logoutUser: () => {
+                localStorage.removeItem("token");
+                setStore({ isAuthenticated: false });
+            },
+            verifyAuth: () => {
+                const token = localStorage.getItem("token");
+                if (token) {
+                    setStore({ isAuthenticated: true });
+                }
             }
-		}
-	};
+        }
+    };
 };
 
 export default getState;
