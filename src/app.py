@@ -15,7 +15,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # 🔹 Habilitar CORS con soporte de credenciales
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, supports_credentials=True)
 
 # 🔹 Configuración de la base de datos
 db_url = os.getenv("DATABASE_URL")
@@ -79,29 +79,38 @@ def create_user():
         return jsonify({"msg": str(e)}), 500
 
 # 🔹 Endpoint para login con depuración
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['OPTIONS', 'POST'])
 def login():
-    print("🔹 Recibiendo petición de login...")  # ✅ Depuración
-    data = request.get_json()
+    if request.method == "OPTIONS":
+        response = jsonify({"msg": "OK"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        return response, 200
 
+    data = request.get_json()
     if not data or "email" not in data or "contraseña" not in data:
-        print("❌ Error: Datos faltantes en el request")
-        return jsonify({"msg": "Faltan datos en la solicitud"}), 400
+        response = jsonify({"msg": "Faltan datos en la solicitud"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response, 400
 
     try:
         user = Usuario.query.filter_by(email=data['email']).first()
         
         if user is None or not check_password_hash(user.contraseña, data['contraseña']):
-            print("❌ Error: Credenciales incorrectas")
-            return jsonify({"msg": "Credenciales incorrectas"}), 401
+            response = jsonify({"msg": "Credenciales incorrectas"})
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            return response, 401
 
         access_token = create_access_token(identity=str(user.id))
-        print("✅ Login exitoso para:", user.email)
-        
-        return jsonify({"msg": "Login successful", "access_token": access_token}), 200
+        response = jsonify({"msg": "Login successful", "access_token": access_token})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response, 200
     except Exception as e:
-        print("❌ Error en el servidor:", str(e))
-        return jsonify({"msg": str(e)}), 500
+        response = jsonify({"msg": str(e)})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response, 500
+
 
 # 🔹 Endpoint protegido con JWT
 @app.route('/private', methods=['GET'])
