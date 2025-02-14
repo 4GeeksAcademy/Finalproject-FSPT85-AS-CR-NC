@@ -40,7 +40,7 @@ export const Navbar = () => {
     useEffect(() => {
 		const fetchVehicles = async () => {
 			try {
-				const response = await fetch("https://super-duper-space-system-jj4w47wp677wcj77x-3001.app.github.dev/api/vehicles");
+				const response = await fetch(`${process.env.BACKEND_URL}/api/vehicles`);
 				const data = await response.json();
 				setVehiculos(data);
 			} catch (error) {
