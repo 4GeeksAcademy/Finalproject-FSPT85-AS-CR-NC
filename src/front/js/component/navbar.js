@@ -1,21 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom"; 
+import { Context } from "../store/appContext";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-	const [vehiculos, setVehiculos] = useState([]);
     const navigate = useNavigate();
+    const [vehiculos, setVehiculos] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        setIsAuthenticated(!!token);
+        if (token) {
+            // Verifica autenticación solo si hay un token
+            actions.verifyAuth();
+        }
     }, []);
 
-	useEffect(() => {
+    const handleAuth = async (e) => {
+        e.preventDefault();
+        setErrorMessage("");
+
+        const success = await actions.loginUser(email, password);
+        if (success) {
+            setEmail("");
+            setPassword("");
+            
+            // Cierra el modal correctamente
+            const modalElement = document.getElementById("loginModal");
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) modal.hide();
+        } else {
+            setErrorMessage("Error en el login");
+        }
+    };
+
+    useEffect(() => {
 		const fetchVehicles = async () => {
 			try {
 				const response = await fetch("https://psychic-cod-5g7vr7qxp5ghx9p-3001.app.github.dev/api/vehicles");
@@ -29,53 +51,16 @@ export const Navbar = () => {
 		fetchVehicles();
 	}, []);
 
-    const handleAuth = async (e) => {
-        e.preventDefault();
-        setErrorMessage("");
-
-        try {
-            const response = await fetch("https://probable-memory-wr9j95jq65rwh59xg-3001.app.github.dev//login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, contraseña: password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.msg || "Error en el login");
-            }
-
-            localStorage.setItem("token", data.access_token);
-            setIsAuthenticated(true);
-            setEmail("");
-            setPassword("");
-
-            // Cierra el modal
-            const modalElement = document.getElementById("loginModal");
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            modal.hide();
-        } catch (error) {
-            setErrorMessage(error.message);
-        }
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        setIsAuthenticated(false);
-        navigate("/");
-    };
-
     return (
         <>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
-                    <a className="navbar-brand text-secondary-emphasis fs-6 fw-bold text-reset" href="#">@4Cars</a>
+                    <a className="navbar-brand text-secondary-emphasis fs-6 fw-bold text-reset" href="#" onClick={() => navigate("/")}>@4Cars</a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Vehículos</a>
 								<ul className="dropdown-menu">
@@ -91,15 +76,21 @@ export const Navbar = () => {
                             <li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
                             <li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>
                         </ul>
-                        {!isAuthenticated && (
-                            <button type="button" className="btn boton-signup">Signup</button>
+                        {!store.isAuthenticated && (
+                            <button
+                                type="button"
+                                className="btn boton-signup"
+                                onClick={() => navigate("/register")}
+                            >
+                                Signup
+                            </button>
                         )}
-                        {isAuthenticated ? (
+                        {store.isAuthenticated ? (
                             <button
                                 type="button"
                                 className="btn"
                                 style={{ backgroundColor: "#B22222", color: "white" }}
-                                onClick={handleLogout}
+                                onClick={() => { actions.logoutUser(); alert('Has cerrado sesión correctamente.'); }}
                             >
                                 Logout
                             </button>
