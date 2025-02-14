@@ -40,7 +40,7 @@ export const Navbar = () => {
     useEffect(() => {
 		const fetchVehicles = async () => {
 			try {
-				const response = await fetch("https://psychic-cod-5g7vr7qxp5ghx9p-3001.app.github.dev/api/vehicles");
+				const response = await fetch("https://super-duper-space-system-jj4w47wp677wcj77x-3001.app.github.dev/api/vehicles");
 				const data = await response.json();
 				setVehiculos(data);
 			} catch (error) {
@@ -66,7 +66,7 @@ export const Navbar = () => {
 								<ul className="dropdown-menu">
 							{vehiculos.map((vehiculo) => (
 								<li key={vehiculo.id}>
-									<Link className="dropdown-item" to={`/vehicle/${vehiculo.id}`}>
+									<Link className="dropdown-item" to={`vehicle/${vehiculo.id}`}>
 									{vehiculo.marca} {vehiculo.modelo}
 									</Link>
 								</li>
