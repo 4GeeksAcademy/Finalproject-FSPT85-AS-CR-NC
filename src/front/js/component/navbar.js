@@ -18,8 +18,8 @@ export const Navbar = () => {
 	useEffect(() => {
 		const fetchVehicles = async () => {
 			try {
-				const reponse = await fetch("https://psychic-cod-5g7vr7qxp5ghx9p-3001.app.github.dev/api/vehicles");
-				const data = await reponse.json();
+				const response = await fetch("https://psychic-cod-5g7vr7qxp5ghx9p-3001.app.github.dev/api/vehicles");
+				const data = await response.json();
 				setVehiculos(data);
 			} catch (error) {
 				console.error("Error al obtener los vehiculos", error);
@@ -78,7 +78,6 @@ export const Navbar = () => {
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Vehículos</a>
-                                <ul className="dropdown-menu">
 								<ul className="dropdown-menu">
 							{vehiculos.map((vehiculo) => (
 								<li key={vehiculo.id}>
@@ -88,7 +87,6 @@ export const Navbar = () => {
 								</li>
 							))}
 						</ul>
-                                </ul>
                             </li>
                             <li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
                             <li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>
