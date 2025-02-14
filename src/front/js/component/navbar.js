@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
@@ -8,6 +9,7 @@ export const Navbar = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+    const [vehiculos, setVehiculos] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -35,6 +37,20 @@ export const Navbar = () => {
         }
     };
 
+    useEffect(() => {
+		const fetchVehicles = async () => {
+			try {
+				const response = await fetch("https://psychic-cod-5g7vr7qxp5ghx9p-3001.app.github.dev/api/vehicles");
+				const data = await response.json();
+				setVehiculos(data);
+			} catch (error) {
+				console.error("Error al obtener los vehiculos", error);
+			}
+		};
+
+		fetchVehicles();
+	}, []);
+
     return (
         <>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -44,14 +60,18 @@ export const Navbar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Vehículos</a>
-                                <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="#">Vehículo 1</a></li>
-                                    <li><a className="dropdown-item" href="#">Vehículo 2</a></li>
-                                    <li><a className="dropdown-item" href="#">Vehículo 3</a></li>
-                                </ul>
+								<ul className="dropdown-menu">
+							{vehiculos.map((vehiculo) => (
+								<li key={vehiculo.id}>
+									<Link className="dropdown-item" to={`/vehicle/${vehiculo.id}`}>
+									{vehiculo.marca} {vehiculo.modelo}
+									</Link>
+								</li>
+							))}
+						</ul>
                             </li>
                             <li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
                             <li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>
