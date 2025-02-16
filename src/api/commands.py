@@ -45,7 +45,7 @@ def setup_commands(app):
             Vehiculo(marca="Toyota", modelo="Corolla Hybrid", potencia="140 CV", plazas=5, combustible="Híbrido",
                      autonomia="900 km", foto="url_foto_3", año=2023, precio_por_dia=35.0),
             Vehiculo(marca="Renault", modelo="Zoe", potencia="110 CV", plazas=5, combustible="Eléctrico",
-                     autonomia="400 km", foto="url_foto_3", año=2023, precio_por_dia=30.0),
+                     autonomia="400 km", foto="url_foto_3", año=2023, precio_por_dia=35.0),
             #Sedan/Berlinas
             Vehiculo(marca="BMW", modelo="Serie 3", potencia="286 CV", plazas=5, combustible="Diesel",
                      autonomia="950 km", foto="url_foto_2", año=2022, precio_por_dia=40.0),
@@ -59,7 +59,7 @@ def setup_commands(app):
             Vehiculo(marca="Toyota", modelo="Proace Verso Hibryd", potencia="180 CV", plazas=9, combustible="Híbrido",
                      autonomia="900 km", foto="url_foto_3", año=2022, precio_por_dia=45.0),
             Vehiculo(marca="Mercedes-Benz", modelo="eVito Tourer", potencia="283 CV", plazas=8, combustible="Eléctrico",
-                     autonomia="370 km", foto="url_foto_3", año=2023, precio_por_dia=40.0),
+                     autonomia="370 km", foto="url_foto_3", año=2023, precio_por_dia=45.0),
 
         ]
         db.session.add_all(vehiculos)

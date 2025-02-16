@@ -73,6 +73,7 @@
 		]
 	},
 	"dependencies": {
+		"bootstrap": "^5.3.3",
 		"flask-cors": "^0.0.1",
 		"prop-types": "^15.6.1",
 		"react": "^16.8.4",
