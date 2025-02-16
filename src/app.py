@@ -4,12 +4,13 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from api.utils import APIException, generate_sitemap
-from api.models import db, Usuario
+from api.models import db, Usuario, Reserva, Vehiculo
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from dateutil import parser
 
 # 🔹 Inicializar Flask correctamente
 app = Flask(__name__)
@@ -110,6 +111,52 @@ def login():
         response = jsonify({"msg": str(e)})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response, 500
+
+
+@app.route('/create-reservation', methods=['POST'])
+def create_reservation():
+    data = request.get_json()
+    try:
+        # Ahora solo requerimos vehiculo_id, fecha_inicio y fecha_fin
+        required_fields = ['fecha_inicio', 'fecha_fin', 'vehiculo_id']
+        
+        if not all(key in data for key in required_fields):
+            return jsonify({"msg": "Faltan campos obligatorios"}), 400
+
+        # Convertir fechas al formato datetime
+        try:
+            fecha_inicio = datetime.fromisoformat(data['fecha_inicio'])
+            fecha_fin = datetime.fromisoformat(data['fecha_fin'])
+        except ValueError:
+            return jsonify({"msg": "Formato de fecha inválido. Usa ISO 8601."}), 400
+
+        # Verificar si el vehículo existe
+        vehiculo = Vehiculo.query.get(data['vehiculo_id'])
+        if not vehiculo:
+            return jsonify({"msg": "Vehículo no encontrado"}), 404
+
+        # Crear nueva reserva SIN usuario
+        new_reservation = Reserva(
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin,
+            vehiculo_id=vehiculo.id
+        )
+
+        # Guardar en la base de datos
+        db.session.add(new_reservation)
+        db.session.commit()
+
+        return jsonify({"msg": "Reserva creada exitosamente", "reservation": new_reservation.serialize()}), 201
+
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=3001)
+
 
 
 # 🔹 Endpoint protegido con JWT
