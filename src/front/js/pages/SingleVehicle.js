@@ -57,7 +57,7 @@ export const SingleVehicle = () => {
                 <div className="row">
                     {/* Columna de info */}
                     <div className="col-md-6">
-                        <div className="card" style={{ width: "100%" }}>
+                        <div className="card full-width">
                             <img
                                 src={foto}
                                 className="card-img-top"
@@ -104,7 +104,7 @@ export const SingleVehicle = () => {
                         </Carousel>
 
                         {/* Div precio y reserva */}
-                        <div className="card text-center p-3" style={{ width: "100%" }}>
+                        <div className="card text-center p-3 full-width">
                             <h3 className="fw-bold">{precio_por_dia.toFixed(2)} € / día</h3>
                             <Button variant="primary" className="mt-2 w-100">
                                 Reserva ya
