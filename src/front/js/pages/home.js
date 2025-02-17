@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/home.css";
+import imagehome from "../../img/home.jpg" 
+
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -9,7 +11,58 @@ export const Home = () => {
 
 	return (
 		<div className="text-center">
-			<img src="https://www.enterprise.es/content/dam/ecom/utilitarian/emea/meet-the-fleet/one-enterprise-fleet-emea.jpg" className="img-fluid" alt="..." />
+			<img src={imagehome} className="img-fluid" alt="..." />
+            <h1 className="mt-5 mb-5 fs-3">Bienvenidos a @4Cars, tu alquiler fácil</h1>
+            <div className="container text-center mb-3 pt-3 border border-start-0 border-end-0">
+                <div className="row">
+                    <div className="col">
+                        <div className="card mb-3" style={{ maxWidth: "400px" }}>
+                            <div className="row g-0">
+                                <div className="col-md-4">
+                                <img src="..." className="img-fluid rounded-start" alt="..." />
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Card title</h5>
+                                    <p className="card-text">This is a wider card with supporting text below</p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="card mb-3" style={{ maxWidth: "400px" }}>
+                            <div className="row g-0">
+                                <div className="col-md-4">
+                                <img src="..." className="img-fluid rounded-start" alt="..." />
+                                </div>
+                                <div className="col-md-8">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Card title</h5>
+                                        <p className="card-text">This is a wider card with supporting text below</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                    <div className="card mb-3" style={{ maxWidth: "400px" }}>
+                        <div className="row g-0">
+                            <div className="col-md-4">
+                                <img src="..." className="img-fluid rounded-start" alt="..." />
+                            </div>
+                            <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Card title</h5>
+                                    <p className="card-text">This is a wider card with supporting text below</p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 className="mt-5 mb-5 fs-4">Vehículos más populares</h3>
             {primerostresVehiculos.length > 0 ? (
                 primerostresVehiculos.map((vehicle, index) => (
                     <div
