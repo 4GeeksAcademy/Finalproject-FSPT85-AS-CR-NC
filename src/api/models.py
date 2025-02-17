@@ -69,20 +69,17 @@ class Vehiculo(db.Model):
             "precio_por_dia": self.precio_por_dia
         }
 
-# Tabla de Reserva (Historial de reservas/favoritos)
 class Reserva(db.Model):
     __tablename__ = 'reserva'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    usuario_id: Mapped[int] = mapped_column(Integer, ForeignKey('usuario.id'), nullable=False)
+    usuario_id: Mapped[int] = mapped_column(Integer, ForeignKey('usuario.id'), nullable=True)
     vehiculo_id: Mapped[int] = mapped_column(Integer, ForeignKey('vehiculo.id'), nullable=False)
     fecha_inicio: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
     fecha_fin: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
-    destino: Mapped[str] = mapped_column(String(200), nullable=False)
-    estado: Mapped[str] = mapped_column(String(50), nullable=False, default="pendiente")
 
-    usuario = relationship("Usuario", back_populates="reservas")
-    vehiculo = relationship("Vehiculo", back_populates="reservas")
+    usuario = relationship("Usuario", back_populates="reservas", lazy="joined")
+    vehiculo = relationship("Vehiculo", back_populates="reservas", lazy="joined")
 
     def calcular_dias_reserva(self):
         """Calcula la cantidad de días de la reserva."""
@@ -96,12 +93,10 @@ class Reserva(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "nombre_usuario": self.usuario.nombre,
-            "marca_modelo": f"{self.vehiculo.marca} {self.vehiculo.modelo}",
+            "usuario": self.usuario.nombre if self.usuario else "No registrado",
+            "vehiculo": f"{self.vehiculo.marca} {self.vehiculo.modelo}",
             "dias_reserva": self.calcular_dias_reserva(),
             "precio_total": round(self.calcular_precio_total(), 2),
-            "destino": self.destino,
             "fecha_inicio": self.fecha_inicio.isoformat(),
-            "fecha_fin": self.fecha_fin.isoformat(),
-            "estado": self.estado
+            "fecha_fin": self.fecha_fin.isoformat()
         }

@@ -42,16 +42,19 @@ export const Footer = () => {
 		useEffect(() => {
 			const fetchVehicles = async () => {
 				try {
+					console.log("🔍 BACKEND_URL:", process.env.BACKEND_URL);  // ✅ Verifica el valor
+		
 					const response = await fetch(`${process.env.BACKEND_URL}/api/vehicles`);
 					const data = await response.json();
 					setVehiculos(data);
 				} catch (error) {
-					console.error("Error al obtener los vehiculos", error);
+					console.error("❌ Error al obtener los vehículos", error);
 				}
 			};
-	
+		
 			fetchVehicles();
 		}, []);
+		
 	
 		return (
 			<>
