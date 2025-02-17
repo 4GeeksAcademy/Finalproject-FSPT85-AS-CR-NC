@@ -12,8 +12,8 @@ export const Checkout = () => {
     const [loading, setLoading] = useState(false); 
     
     const insuranceCostPerDay = 3;
-    const totalDays = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
-    const baseTotal = totalDays && precio_por_dia ? totalDays * precio_por_dia : 0;
+    const totalDays = startDate && endDate ? Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)) : 0;
+    const baseTotal = totalDays > 0 && precio_por_dia ? totalDays * precio_por_dia : 0;
     const insuranceTotal = insurance ? totalDays * insuranceCostPerDay : 0;
     const finalTotal = baseTotal + insuranceTotal;
 
@@ -38,7 +38,7 @@ export const Checkout = () => {
         console.log("📢 Datos enviados al backend:", reservationData);
 
         try {
-            const response = await fetch("https://psychic-orbit-r4rvr6v59p7j259vw-3001.app.github.dev/create-reservation", {
+            const response = await fetch(`${process.env.BACKEND_URL}/create-reservation`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -46,16 +46,18 @@ export const Checkout = () => {
                 body: JSON.stringify(reservationData)
             });
 
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(`✅ Reserva confirmada: ${marca} ${modelo} del ${new Date(startDate).toDateString()} al ${new Date(endDate).toDateString()}`);
-                navigate("/");
-            } else {
-                alert(`❌ Error al reservar: ${data.msg}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
+
+            const data = await response.json();
+            console.log("Reserva creada:", data);
+
+            alert(`✅ Reserva confirmada: ${marca} ${modelo} del ${new Date(startDate).toDateString()} al ${new Date(endDate).toDateString()}`);
+            navigate("/");
         } catch (error) {
-            alert("Error al conectar con el servidor.");
+            console.error("Error al crear la reserva:", error);
+            alert("❌ Error al procesar la reserva. Intenta de nuevo.");
         } finally {
             setLoading(false);
         }
