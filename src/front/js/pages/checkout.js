@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export const Checkout = () => {
     const location = useLocation();
@@ -10,7 +11,7 @@ export const Checkout = () => {
 
     const [insurance, setInsurance] = useState(false);
     const [loading, setLoading] = useState(false); 
-    
+
     const insuranceCostPerDay = 3;
     const totalDays = startDate && endDate ? Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)) : 0;
     const baseTotal = totalDays > 0 && precio_por_dia ? totalDays * precio_por_dia : 0;
@@ -19,9 +20,28 @@ export const Checkout = () => {
 
     const handleConfirm = async () => {
         if (!startDate || !endDate || !vehiculoId) {
-            alert("Faltan datos para completar la reserva.");
+            Swal.fire({
+                title: "Error",
+                text: "Faltan datos para completar la reserva.",
+                icon: "error",
+                confirmButtonText: "OK"
+            });
             return;
         }
+
+        // Confirmación con SweetAlert2
+        const confirmResult = await Swal.fire({
+            title: "¿Confirmar reserva?",
+            text: `Reservarás un ${marca} ${modelo} del ${new Date(startDate).toLocaleDateString()} al ${new Date(endDate).toLocaleDateString()}.`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, confirmar",
+            cancelButtonText: "Cancelar"
+        });
+
+        if (!confirmResult.isConfirmed) return;
 
         setLoading(true);
 
@@ -38,6 +58,16 @@ export const Checkout = () => {
         console.log("📢 Datos enviados al backend:", reservationData);
 
         try {
+            // Mostrar loader mientras se procesa la reserva
+            Swal.fire({
+                title: "Procesando reserva...",
+                text: "Por favor, espera un momento.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             const response = await fetch(`${process.env.BACKEND_URL}/create-reservation`, {
                 method: "POST",
                 headers: {
@@ -47,17 +77,26 @@ export const Checkout = () => {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`Error en la reserva. Código: ${response.status}`);
             }
 
             const data = await response.json();
             console.log("Reserva creada:", data);
 
-            alert(`✅ Reserva confirmada: ${marca} ${modelo} del ${new Date(startDate).toDateString()} al ${new Date(endDate).toDateString()}`);
-            navigate("/");
+            Swal.fire({
+                title: "Reserva confirmada ✅",
+                text: `Tu reserva del ${marca} ${modelo} ha sido confirmada del ${new Date(startDate).toLocaleDateString()} al ${new Date(endDate).toLocaleDateString()}.`,
+                icon: "success",
+                confirmButtonText: "OK"
+            }).then(() => navigate("/")); // Redirige al usuario tras confirmar
         } catch (error) {
             console.error("Error al crear la reserva:", error);
-            alert("❌ Error al procesar la reserva. Intenta de nuevo.");
+            Swal.fire({
+                title: "Error",
+                text: "No se pudo procesar la reserva. Intenta de nuevo.",
+                icon: "error",
+                confirmButtonText: "OK"
+            });
         } finally {
             setLoading(false);
         }
@@ -66,8 +105,8 @@ export const Checkout = () => {
     return (
         <div className="text-center mt-5">
             <h1>DATOS DE TU RESERVA</h1>
-            <p><strong>Fecha de Inicio:</strong> {startDate ? new Date(startDate).toDateString() : "No seleccionado"}</p>
-            <p><strong>Fecha de Fin:</strong> {endDate ? new Date(endDate).toDateString() : "No seleccionado"}</p>
+            <p><strong>Fecha de Inicio:</strong> {startDate ? new Date(startDate).toLocaleDateString() : "No seleccionado"}</p>
+            <p><strong>Fecha de Fin:</strong> {endDate ? new Date(endDate).toLocaleDateString() : "No seleccionado"}</p>
             <p><strong>Total de días:</strong> {totalDays || "No calculado"}</p>
             
             <h1>DATOS DEL VEHÍCULO</h1>
