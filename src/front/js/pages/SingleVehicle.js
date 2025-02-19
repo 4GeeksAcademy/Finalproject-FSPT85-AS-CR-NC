@@ -75,7 +75,7 @@ export const SingleVehicle = () => {
         });
     };
 
-    const { marca, modelo, potencia, plazas, combustible, autonomia, foto, año, precio_por_dia } = store.selectedVehicle;
+    const { marca, modelo, potencia, plazas, combustible, autonomia, foto, año, precio_por_dia, descripcion } = store.selectedVehicle;
 
     return (
         <div>
@@ -131,6 +131,10 @@ export const SingleVehicle = () => {
                                     <strong>Autonomía:</strong> {autonomia}<br />
                                     <strong>Año:</strong> {año}<br />
                                     <strong>Precio por día:</strong> {precio_por_dia.toFixed(2)} €
+                                </p>
+                                <p className="card-text">
+                                    <strong>Descripción:</strong><br />
+                                    {descripcion}
                                 </p>
                             </div>
                         </div>
