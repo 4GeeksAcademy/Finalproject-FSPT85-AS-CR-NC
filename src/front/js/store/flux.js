@@ -1,19 +1,9 @@
+import Swal from "sweetalert2";
+
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
             message: null,
-            demo: [
-                {
-                    title: "FIRST",
-                    background: "white",
-                    initial: "white"
-                },
-                {
-                    title: "SECOND",
-                    background: "white",
-                    initial: "white"
-                }
-            ],
             vehicles: [],
             selectedVehicle: null,
             isAuthenticated: false
@@ -25,22 +15,39 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const data = await resp.json();
                     setStore({ vehicles: data });
                 } catch (error) {
-                    console.log("Error fetching vehicles from backend", error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al obtener los vehículos",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    console.error("Error fetching vehicles from backend", error);
                 }
             },
+
+            // ✅ NUEVA FUNCIÓN: OBTENER VEHÍCULO POR ID
             fetchVehicleById: async (vehicleId) => {
                 try {
                     const resp = await fetch(`${process.env.BACKEND_URL}/api/vehicles/${vehicleId}`);
+                    
                     if (!resp.ok) {
-                        throw new Error("Vehicle not found");
+                        throw new Error("Vehículo no encontrado");
                     }
+                    
                     const data = await resp.json();
                     setStore({ selectedVehicle: data });
                 } catch (error) {
-                    console.log("Error fetching vehicle by ID", error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "No se pudo obtener la información del vehículo.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    console.error("Error fetching vehicle by ID:", error);
                     setStore({ selectedVehicle: null });
                 }
             },
+
             registerUser: async (userData) => {
                 try {
                     const response = await fetch(`${process.env.BACKEND_URL}/signup`, {
@@ -48,44 +55,79 @@ const getState = ({ getStore, getActions, setStore }) => {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(userData)
                     });
-                    
+
                     const data = await response.json();
                     if (!response.ok) {
                         throw new Error(data.msg || "Error en el registro");
                     }
-                    alert("Usuario registrado exitosamente");
+
+                    Swal.fire({
+                        title: "Registro exitoso",
+                        text: "Tu cuenta ha sido creada correctamente",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    });
+
                     return true;
                 } catch (error) {
-                    alert(error.message);
+                    Swal.fire({
+                        title: "Error en el registro",
+                        text: error.message,
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
                     return false;
                 }
             },
+
             loginUser: async (email, contraseña) => {
                 try {
                     const response = await fetch(`${process.env.BACKEND_URL}/login`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ email, contraseña }),
-                        credentials: "omit" 
+                        credentials: "omit"
                     });
-                    
+
                     const data = await response.json();
                     if (!response.ok) {
                         throw new Error(data.msg || "Error en el login");
                     }
-                    
+
                     localStorage.setItem("token", data.access_token);
                     setStore({ isAuthenticated: true });
+
+                    Swal.fire({
+                        title: "Inicio de sesión exitoso",
+                        text: "Bienvenido de nuevo",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    });
+
                     return true;
                 } catch (error) {
-                    alert(error.message);
+                    Swal.fire({
+                        title: "Error en el login",
+                        text: error.message,
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
                     return false;
                 }
             },
+
             logoutUser: () => {
                 localStorage.removeItem("token");
                 setStore({ isAuthenticated: false });
+
+                Swal.fire({
+                    title: "Sesión cerrada",
+                    text: "Has cerrado sesión exitosamente",
+                    icon: "info",
+                    confirmButtonText: "OK"
+                });
             },
+
             verifyAuth: () => {
                 const token = localStorage.getItem("token");
                 if (token) {

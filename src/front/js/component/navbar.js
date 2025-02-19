@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+import { Modal } from "bootstrap";  // Importa Bootstrap correctamente
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
@@ -14,7 +15,6 @@ export const Navbar = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            // Verifica autenticación solo si hay un token
             actions.verifyAuth();
         }
     }, []);
@@ -27,40 +27,56 @@ export const Navbar = () => {
         if (success) {
             setEmail("");
             setPassword("");
-            
-            // Cierra el modal correctamente
+
+            // ✅ Solución: Obtener la instancia del modal correctamente
             const modalElement = document.getElementById("loginModal");
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            if (modal) modal.hide();
+            if (modalElement) {
+                const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+                modal.hide();  // Cierra el modal
+            }
+
+            // ✅ Mover el foco al botón de login después de cerrar el modal
+            document.getElementById("openModalButton")?.focus();
         } else {
             setErrorMessage("Error en el login");
         }
     };
 
     useEffect(() => {
-		const fetchVehicles = async () => {
-			try {
-				const response = await fetch(`${process.env.BACKEND_URL}/api/vehicles`);
-				const data = await response.json();
-				setVehiculos(data);
-			} catch (error) {
-				console.error("Error al obtener los vehiculos", error);
-			}
-		};
+        const fetchVehicles = async () => {
+            try {
+                const response = await fetch(`${process.env.BACKEND_URL}/api/vehicles`);
+                const data = await response.json();
+                setVehiculos(data);
+            } catch (error) {
+                console.error("Error al obtener los vehículos", error);
+            }
+        };
 
-		fetchVehicles();
-	}, []);
+        fetchVehicles();
+    }, []);
 
     return (
         <>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
-                    <a className="navbar-brand text-secondary-emphasis fs-6 fw-bold text-reset" href="#" onClick={() => navigate("/")}>@4Cars</a>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                    <a 
+                        className="navbar-brand text-secondary-emphasis fs-6 fw-bold text-reset" 
+                        href="#" 
+                        onClick={() => navigate("/")}
+                    >
+                        @4Cars
+                    </a>
+                    <button 
+                        className="navbar-toggler" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#navbarSupportedContent"
+                    >
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
+                        <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" style={{ color: "#112d4e" }} href="#" data-bs-toggle="dropdown">Vehículos</a>
 								<ul className="dropdown-menu">
@@ -90,13 +106,14 @@ export const Navbar = () => {
                                 type="button"
                                 className="btn"
                                 style={{ backgroundColor: "#B22222", color: "white" }}
-                                onClick={() => { actions.logoutUser(); alert('Has cerrado sesión correctamente.'); }}
+                                onClick={() => { actions.logoutUser(); }}
                             >
                                 Logout
                             </button>
                         ) : (
                             <button
                                 type="button"
+                                id="openModalButton"  // ✅ Se agrega un ID para el foco
                                 className="btn"
                                 style={{ backgroundColor: "#112D4E", color: "white" }}
                                 data-bs-toggle="modal"
@@ -115,7 +132,12 @@ export const Navbar = () => {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button 
+                                type="button" 
+                                className="btn-close" 
+                                data-bs-dismiss="modal" 
+                                aria-label="Close"
+                            ></button>
                         </div>
                         <div className="modal-body">
                             <form onSubmit={handleAuth}>

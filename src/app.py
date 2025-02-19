@@ -11,6 +11,8 @@ from api.commands import setup_commands
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from dateutil import parser
+from psycopg2.errors import UniqueViolation
+from sqlalchemy.exc import IntegrityError
 
 # 🔹 Inicializar Flask correctamente
 app = Flask(__name__)
@@ -52,12 +54,13 @@ def sitemap():
 @app.route('/signup', methods=['POST'])
 def create_user():
     data = request.get_json()
+
     try:
         required_fields = ['email', 'contraseña', 'nombre', 'apellidos', 'direccion', 
                            'poblacion', 'telefono', 'fecha_nacimiento', 'fecha_obtencion_carnet']
         if not all(key in data for key in required_fields):
             return jsonify({"msg": "Faltan campos obligatorios"}), 400
-        
+
         hashed_password = generate_password_hash(data['contraseña'])
 
         new_user = Usuario(
@@ -75,9 +78,20 @@ def create_user():
         db.session.add(new_user)
         db.session.commit()
 
-        return jsonify({"msg": "Usuario creado exitosamente", "user": new_user.serialize()}), 201
+        return jsonify({"msg": "Usuario creado exitosamente"}), 201
+
+    except IntegrityError as e:
+        db.session.rollback()  # Revierte la transacción en caso de error
+        if isinstance(e.orig, UniqueViolation):
+            return jsonify({"msg": "El correo electrónico ya está en uso. Intenta con otro."}), 400
+        return jsonify({"msg": "Error en la base de datos"}), 500
     except Exception as e:
+        db.session.rollback()
         return jsonify({"msg": str(e)}), 500
+
+if __name__ == "__main__":
+    db.create_all()
+    app.run(debug=True)
 
 # 🔹 Endpoint para login con depuración
 @app.route('/login', methods=['OPTIONS', 'POST'])
