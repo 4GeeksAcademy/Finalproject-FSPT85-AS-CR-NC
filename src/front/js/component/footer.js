@@ -58,13 +58,12 @@ export const Footer = () => {
 	
 		return (
 			<>
-				<footer className="footer">
+				<footer className="footer" style={{ backgroundColor: "#112d4e" }}>
 					<div className="container">
 						<div className="row align-items-center">
 							<div className="col-md-6">
-								<div className="footer-brand">CompanyName</div>
-								<p className="footer-text">Creating amazing experiences and innovative solutions for our customers
-									worldwide.</p>
+								<div className="footer-brand" style={{ color: "#fff" }}>@4Cars</div>
+								<p className="footer-text text-white">Tu agencia de alquiler de confianza</p>
 								<div className="social-links">
 									<a href="#" className="social-link"><i className="fab fa-twitter"></i></a>
 									<a href="#" className="social-link"><i className="fab fa-facebook"></i></a>
@@ -76,7 +75,7 @@ export const Footer = () => {
 							<div className="col-md-6 text-md-end">
 								<ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
 									<li className="nav-item dropdown">
-										<a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Vehículos</a>
+										<a className="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown">Vehículos</a>
 											<ul className="dropdown-menu">
 												{vehiculos.map((vehiculo) => (
 													<li key={vehiculo.id}>
@@ -87,8 +86,8 @@ export const Footer = () => {
 												))}
 											</ul>
 												</li>
-												<li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
-												<li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>								</ul>
+												<li className="nav-item"><a className="nav-link text-white" href="#">Precios</a></li>
+												<li className="nav-item"><a className="nav-link text-white" href="#">Contacto</a></li>								</ul>
 							</div>
 						</div>
 
