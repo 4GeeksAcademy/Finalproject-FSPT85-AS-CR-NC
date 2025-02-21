@@ -1,14 +1,36 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 import { Context } from "../store/appContext";
+import emailjs from "emailjs-com";
 import "../../styles/register.css";
 
 export const Register = () => {
     const { actions } = useContext(Context);
     const navigate = useNavigate();
+
+    const sendConfirmationEmail = (email, name) => {
+        const templateParams = {
+            to_email: email,
+            to_name: name,
+        };
+
+        emailjs.send(
+            "service_d69rzc5",
+            "template_aqy6q17",
+            templateParams,
+            "znbda1wlH4IIiEjOY"
+        ).then(
+            (response) => {
+                console.log("Email enviado con éxito", response.status, response.text);
+            },
+            (error) => {
+                console.error("Error al enviar el email", error);
+            }
+        );
+    };
 
     const today = new Date();
     const eighteenYearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
@@ -45,13 +67,14 @@ export const Register = () => {
             .matches(/[0-9]/, "Debe contener al menos un número")
             .matches(/[@$!%*?&]/, "Debe contener al menos un carácter especial (@$!%*?&)")
             .required("Campo requerido"),
+        confirmarContraseña: Yup.string()
+            .oneOf([Yup.ref("contraseña"), null], "Las contraseñas no coinciden")
+            .required("Campo requerido"),
         fecha_nacimiento: Yup.date()
             .required("Campo requerido")
-            .transform((value, originalValue) => (originalValue ? new Date(originalValue) : null))
             .max(eighteenYearsAgo, "Debe ser mayor de 18 años"),
         fecha_obtencion_carnet: Yup.date()
             .required("Campo requerido")
-            .transform((value, originalValue) => (originalValue ? new Date(originalValue) : null))
             .max(oneYearAgo, "Debe tener al menos 1 año de antigüedad"),
     });
 
@@ -65,32 +88,18 @@ export const Register = () => {
             direccion: "",
             poblacion: "",
             email: "",
-            contraseña: ""
+            contraseña: "",
+            confirmarContraseña: ""
         },
         validationSchema,
         onSubmit: async (values) => {
-            const formattedValues = {
-                email: values.email,
-                contraseña: values.contraseña,
-                nombre: values.nombre,
-                apellidos: values.apellidos,
-                direccion: values.direccion,
-                poblacion: values.poblacion,
-                telefono: values.telefono,
-                fecha_nacimiento: values.fecha_nacimiento
-                    ? new Date(values.fecha_nacimiento).toISOString().split("T")[0]
-                    : "",
-                fecha_obtencion_carnet: values.fecha_obtencion_carnet
-                    ? new Date(values.fecha_obtencion_carnet).toISOString().split("T")[0]
-                    : ""
-            };
-
-            const success = await actions.registerUser(formattedValues);
+            const success = await actions.registerUser(values);
             if (success) {
+                sendConfirmationEmail(values.email, values.nombre);
                 formik.resetForm();
                 Swal.fire({
                     title: "Registro Exitoso",
-                    text: "Tu cuenta ha sido creada correctamente",
+                    text: "Tu cuenta ha sido creada correctamente. Revisa tu email para confirmar tu cuenta.",
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(() => {
@@ -104,36 +113,37 @@ export const Register = () => {
         <div className="container mt-5">
             <h2 className="text-center">Registro</h2>
             <p className="text-center">Signup now. It's free and takes less than 3 minutes</p>
-            <form onSubmit={formik.handleSubmit} className="w-50 mx-auto">
+            <form onSubmit={formik.handleSubmit} className="w-50 mx-auto mb-5">
                 <div className="row">
-                    {[
-                        { name: "nombre", label: "Nombre" },
-                        { name: "apellidos", label: "Apellidos" },
-                        { name: "telefono", label: "Teléfono" },
-                        { name: "fecha_nacimiento", label: "Fecha de Nacimiento", type: "date" },
-                        { name: "fecha_obtencion_carnet", label: "Fecha de Carnet", type: "date" },
-                        { name: "direccion", label: "Dirección" },
-                        { name: "poblacion", label: "Población" },
-                        { name: "email", label: "Email", type: "email" },
-                        { name: "contraseña", label: "Contraseña", type: "password" }
-                    ].map((field) => (
-                        <div key={field.name} className="col-md-6 mb-3">
+                    {["nombre", "apellidos", "telefono", "fecha_nacimiento", "fecha_obtencion_carnet", "direccion", "poblacion", "email", "contraseña", "confirmarContraseña"].map((field) => (
+                        <div key={field} className="col-md-6 mb-3">
                             <input
-                                type={field.type || "text"}
-                                name={field.name}
-                                placeholder={field.label}
+                                type={field === "contraseña" || field === "confirmarContraseña" ? "password" : field.includes("fecha") ? "text" : "text"}
+                                name={field}
+                                placeholder={
+                                    field === "fecha_nacimiento" ? "Fecha de nacimiento" :
+                                    field === "fecha_obtencion_carnet" ? "Fecha del carnet" :
+                                    field === "contraseña" ? "Contraseña" :
+                                    field === "confirmarContraseña" ? "Confirmar contraseña" :
+                                    field.replace("_", " ").charAt(0).toUpperCase() + field.replace("_", " ").slice(1)
+                                }
                                 className="form-control"
-                                value={formik.values[field.name] || ""}
+                                value={formik.values[field] || ""}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
+                                onFocus={(e) => {
+                                    if (field.includes("fecha")) {
+                                        e.target.type = "date";
+                                    }
+                                }}
                             />
-                            {formik.touched[field.name] && formik.errors[field.name] ? (
-                                <div className="text-danger">{formik.errors[field.name]}</div>
+                            {formik.touched[field] && formik.errors[field] ? (
+                                <div className="text-danger">{formik.errors[field]}</div>
                             ) : null}
                         </div>
                     ))}
                 </div>
-                <button type="submit" className="btn btn-primary w-100 mt-3" disabled={!(formik.isValid && formik.dirty)}>
+                <button type="submit" className="btn btn-primary w-100 mt-3 mb-5" disabled={!(formik.isValid && formik.dirty)}>
                     REGISTRAR
                 </button>
             </form>

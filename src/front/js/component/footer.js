@@ -94,14 +94,13 @@ export const Footer = () => {
 															</Link>
 														</li>
 													))}
-													<li><hr className="dropdown-divider" /></li>
 												</React.Fragment>
-												)
-											))}
+											)
+										))}
 										</ul>
 									</li>
-										<li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
-										<li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>
+									<li className="nav-item"><a className="nav-link text-white" href="/condiciones">Condiciones</a></li>
+									<li className="nav-item"><a className="nav-link text-white" href="#contacto">Contacto</a></li>
 								</ul>
 							</div>
 						</div>

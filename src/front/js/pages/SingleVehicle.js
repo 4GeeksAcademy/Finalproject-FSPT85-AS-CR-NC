@@ -160,8 +160,8 @@ export const SingleVehicle = () => {
                 </div>
             </div>
 
-           {/* Sección de información adicional y contacto */}
-           <div className="container mt-5 mb-5">
+        {/* Sección de información adicional y contacto */}
+        <div className="container mt-5 mb-5">
             <div className="row">
                 {/* Formulario de registro */}
                 <div className="col-md-6">
