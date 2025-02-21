@@ -89,8 +89,8 @@ export const Navbar = () => {
 							))}
 						</ul>
                             </li>
-                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#">Precios</a></li>
-                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#">Contacto</a></li>
+                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="/condiciones">Condiciones</a></li>
+                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#contacto">Contacto</a></li>
                         </ul>
                         {!store.isAuthenticated && (
                             <button

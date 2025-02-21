@@ -103,7 +103,7 @@ export const Home = () => {
             ) : (
                 <p>Cargando vehículos...</p>
             )}
-            <div className="row mt-5 p-5" style={{ border: "2px solid #112d4e" }}>
+            <div className="row mt-5 p-5" id="contacto" style={{ border: "2px solid #112d4e" }}>
                 <div className="col mx-5">
                 <h5 className="card-title my-2" style={{ color: "#112d4e" }}>Más información</h5>
                 <p className="py-3">Si tienes cualquier duda por favor deja tus datos y te escribiremos</p>

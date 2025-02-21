@@ -8,6 +8,7 @@ import { Checkout } from "./pages/checkout";
 import { Demo } from "./pages/demo";
 import { Register } from "./pages/register";
 import { SingleVehicle } from "./pages/SingleVehicle";
+import { Condiciones } from "./pages/condiciones";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
@@ -32,6 +33,7 @@ const Layout = () => {
                         <Route element={<Checkout />} path="/checkout" />
                         <Route element={<SingleVehicle />} path="/vehicle/:id" />
                         <Route element={<Register />} path="/register" />
+                        <Route element={<Condiciones />} path="/condiciones" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />
