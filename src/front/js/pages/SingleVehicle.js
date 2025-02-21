@@ -85,31 +85,13 @@ export const SingleVehicle = () => {
                 <h1>Características del vehículo</h1>
             </div>
 
-            {/* Carrousel de imágenes principales con placeholders */}
+            {/* Imagen principal */}
             <div className="container mt-4">
-                <Carousel>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src="https://placehold.co/500x300"
-                            alt="Placeholder slide 1"
-                        />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src="https://placehold.co/500x300"
-                            alt="Placeholder slide 2"
-                        />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src="https://placehold.co/500x300"
-                            alt="Placeholder slide 3"
-                        />
-                    </Carousel.Item>
-                </Carousel>
+                <img
+                className="d-block w-100"
+                src="https://placehold.co/500x300"
+                alt="Imagen principal"
+                />
             </div>
 
             {/* Parte de la información y el carrousel pequeño */}
