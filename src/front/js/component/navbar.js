@@ -78,25 +78,19 @@ export const Navbar = () => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    Vehículos
-                                </a>
-                                <ul className="dropdown-menu">
-                                    {vehiculos.length > 0 ? (
-                                        vehiculos.map((vehiculo) => (
-                                            <li key={vehiculo.id}>
-                                                <Link className="dropdown-item" to={`/vehicle/${vehiculo.id}`}>
-                                                    {vehiculo.marca} {vehiculo.modelo}
-                                                </Link>
-                                            </li>
-                                        ))
-                                    ) : (
-                                        <li><span className="dropdown-item text-muted">No hay vehículos</span></li>
-                                    )}
-                                </ul>
+                                <a className="nav-link dropdown-toggle" style={{ color: "#112d4e" }} href="#" data-bs-toggle="dropdown">Vehículos</a>
+								<ul className="dropdown-menu">
+							{vehiculos.map((vehiculo) => (
+								<li key={vehiculo.id}>
+									<Link className="dropdown-item" to={`vehicle/${vehiculo.id}`}>
+									{vehiculo.marca} {vehiculo.modelo}
+									</Link>
+								</li>
+							))}
+						</ul>
                             </li>
-                            <li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>
+                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#">Precios</a></li>
+                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#">Contacto</a></li>
                         </ul>
                         {!store.isAuthenticated && (
                             <button
