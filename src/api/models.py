@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, ForeignKey, DateTime, Float
+from sqlalchemy import Integer, String, ForeignKey, DateTime, Float, Text
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -52,6 +52,7 @@ class Vehiculo(db.Model):
     foto: Mapped[str] = mapped_column(String(300), nullable=False)
     año: Mapped[int] = mapped_column(Integer, nullable=False)
     precio_por_dia: Mapped[float] = mapped_column(Float, nullable=False)
+    descripcion: Mapped[str] = mapped_column(Text)
 
     reservas = relationship("Reserva", back_populates="vehiculo")
 
@@ -66,7 +67,8 @@ class Vehiculo(db.Model):
             "autonomia": self.autonomia,
             "foto": self.foto,
             "año": self.año,
-            "precio_por_dia": self.precio_por_dia
+            "precio_por_dia": self.precio_por_dia,
+            "descripcion": self.descripcion
         }
 
 class Reserva(db.Model):

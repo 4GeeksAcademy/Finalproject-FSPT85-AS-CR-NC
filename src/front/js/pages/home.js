@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/home.css";
@@ -6,11 +6,39 @@ import imagehome from "../../img/home.jpg"
 import ReactDOM from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp, faTruckFast, faHouse, faPhone } from '@fortawesome/free-solid-svg-icons'
+import Swal from 'sweetalert2';
 
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
     const primerostresVehiculos = store.vehicles.slice(0, 3);
+
+    // Añadir el estado para "name" y "email"
+  const [name, setName] = useState(""); // Estado para el nombre
+  const [email, setEmail] = useState(""); // Estado para el email
+
+    const handleSubmit = (e) => {
+            e.preventDefault();
+    
+            // Lógica para asegurarte de que los campos no estén vacíos
+            if (!name || !email ) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please fill in all fields!',
+                });
+                return;
+            }
+    
+            // Mostrar una alerta de éxito si todo está bien
+            Swal.fire({
+                icon: 'success',
+                title: 'Welcome!',
+                text: `Welcome, ${name}. Your registration was successful.`,
+            });
+    
+            // Aquí podrías hacer la lógica para enviar los datos al servidor, etc.
+        };
 
 	return (
 		<div className="text-center">
@@ -106,15 +134,15 @@ export const Home = () => {
             <div className="row mt-5 p-5" id="contacto" style={{ border: "2px solid #112d4e" }}>
                 <div className="col mx-5">
                 <h5 className="card-title my-2" style={{ color: "#112d4e" }}>Más información</h5>
-                <p className="py-3">Si tienes cualquier duda por favor deja tus datos y te escribiremos</p>
-                <form>
+                <p className="py-3">Si tienes cualquier duda por favor deja tus datos y te escribiremos.</p>
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label for="formGroupExampleInput">Nombre</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre completo" />
+                        <label htmlFor="formGroupExampleInput">Nombre</label>
+                        <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Nombre completo" value={name} onChange={(e) => setName(e.target.value)} />
                     </div>
                     <div className="form-group">
-                        <label for="formGroupExampleInput2">Email</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Dirección de correo" />
+                        <label htmlFor="formGroupExampleInput2">Email</label>
+                        <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="Correo electrónico" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
                     <button type="submit" className="btn btn-secondary btn-lg btn-block my-3" style={{ backgroundColor: "#112D4E", color: "white" }}>Enviar</button>
                 </form>
@@ -123,7 +151,7 @@ export const Home = () => {
                 <h5 className="card-title my-5" style={{ color: "#112d4e" }}>Llámanos</h5>
                 <FontAwesomeIcon icon={faPhone} size="2x" color="#112d4e"/>
                 <h2 className="my-3" style={{ color: "#112d4e" }}>911000222</h2>
-                <p>Te ofreceremos toda la información que necesites y te asesoraremos sobre las mejores opciones de alquiler para tus necesidades</p>
+                <p>Te ofreceremos toda la información que necesites y te asesoraremos sobre las mejores opciones de alquiler para tus necesidades.</p>
                 </div>
             </div>
         </div>

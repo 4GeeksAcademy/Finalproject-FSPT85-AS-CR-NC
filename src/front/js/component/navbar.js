@@ -56,6 +56,12 @@ export const Navbar = () => {
         fetchVehicles();
     }, []);
 
+    const gruposVehiculos = {
+        "Turismos": vehiculos.filter(v => v.precio_por_dia === 35),
+        "Sedán/Berlinas": vehiculos.filter(v => v.precio_por_dia === 40),
+        "Furgonetas": vehiculos.filter(v => v.precio_por_dia === 45)
+    };
+
     return (
         <>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -79,15 +85,23 @@ export const Navbar = () => {
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" style={{ color: "#112d4e" }} href="#" data-bs-toggle="dropdown">Vehículos</a>
-								<ul className="dropdown-menu">
-							{vehiculos.map((vehiculo) => (
-								<li key={vehiculo.id}>
-									<Link className="dropdown-item" to={`vehicle/${vehiculo.id}`}>
-									{vehiculo.marca} {vehiculo.modelo}
-									</Link>
-								</li>
-							))}
-						</ul>
+								<ul className="dropdown-menu" data-bs-display="static">
+                                {Object.entries(gruposVehiculos).map(([categoria, lista]) => (
+                                    lista.length > 0 && (
+                                    <React.Fragment key={categoria}>
+                                        <li><h6 className="dropdown-header">{categoria}</h6></li>
+                                        {lista.map((vehiculo) => (
+                                            <li key={vehiculo.id}>
+                                                <Link className="dropdown-item" to={`vehicle/${vehiculo.id}`}>
+                                                {vehiculo.marca} {vehiculo.modelo}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                        <li><hr className="dropdown-divider" /></li>
+                                    </React.Fragment>
+                                )
+                            ))}
+                            </ul>
                             </li>
                             <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="/condiciones">Condiciones</a></li>
                             <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#contacto">Contacto</a></li>
