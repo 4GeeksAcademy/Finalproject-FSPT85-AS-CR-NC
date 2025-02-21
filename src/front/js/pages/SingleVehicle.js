@@ -7,6 +7,8 @@ import "../../styles/singleVehicle.css";
 import { Modal, Button, Carousel } from "react-bootstrap";
 import { DateRange } from "react-date-range";
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPhone } from '@fortawesome/free-solid-svg-icons'
 
 export const SingleVehicle = () => {
     const { store, actions } = useContext(Context);
@@ -34,7 +36,7 @@ export const SingleVehicle = () => {
         e.preventDefault();
 
         // Lógica para asegurarte de que los campos no estén vacíos
-        if (!name || !email || !password) {
+        if (!name || !email ) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -117,11 +119,6 @@ export const SingleVehicle = () => {
                     {/* Columna de información */}
                     <div className="col-md-6">
                         <div className="card">
-                            <img
-                                src={foto || "https://via.placeholder.com/800x400?text=Main+Vehicle+Image"}
-                                className="card-img-top"
-                                alt={`${marca} ${modelo}`}
-                            />
                             <div className="card-body">
                                 <h5 className="card-title">{`${marca} ${modelo}`}</h5>
                                 <p className="card-text">
@@ -163,48 +160,47 @@ export const SingleVehicle = () => {
                 </div>
             </div>
 
-            {/* Sección de información adicional y contacto */}
-            <div className="container mt-5">
-                <div className="row">
-                    {/* Formulario de registro */}
-                    <div className="col-md-6">
-                        <h3>Más información</h3>
-                        <p>Contáctanos sin compromiso para obtener mas informacion sobre el vehiculo.</p>
-                        <form onSubmit={handleSubmit}>
-                            <input
-                            type="text"
-                            className="form-control mb-2"
-                            placeholder="Full Name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            />
-                            <input
-                            type="email"
-                            className="form-control mb-2"
-                            placeholder="Email address"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <input
-                            type="password"
-                            className="form-control mb-2"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <Button variant="dark" className="w-100" type="submit">
-                                CLICK PARA MAS INFO
-                            </Button>
-                        </form>
-                    </div>
-                    {/* Sección de contacto */}
-                    <div className="col-md-6 text-center">
-                        <h3>Llámanos</h3>
-                        <p><strong>📞 912 365 897</strong></p>
-                        <p>No dudes en ponerte en contacto con nosotros, estaremos encantados de atenderte y resolver cualquier pregunta que tengas. Nuestro equipo está siempre disponible para ofrecerte el mejor servicio y garantizar que tu experiencia sea satisfactoria. ¡Llámanos ahora y hablemos sobre cómo podemos ayudarte!</p>
-                    </div>
+           {/* Sección de información adicional y contacto */}
+           <div className="container mt-5 mb-5">
+            <div className="row">
+                {/* Formulario de registro */}
+                <div className="col-md-6">
+                    <h3>Más información</h3>
+                    <p>Si tienes cualquier duda por favor deja tus datos y te escribiremos.</p>
+                    <form onSubmit={handleSubmit}>
+                        <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Nombre Completo"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        />
+                        <input
+                        type="email"
+                        className="form-control mb-2"
+                        placeholder="Correo electrónico"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Button variant="dark" className="w-100" type="submit">
+                            ENVIAR
+                        </Button>
+                    </form>
                 </div>
+            {/* Sección de contacto */}
+            <div className="col-md-6 text-center" id="contacto">
+                <h3>Llámanos</h3>
+
+            {/* Contenedor para número de teléfono y el icono */}
+            <p className="d-flex justify-content-center align-items-center">
+                <FontAwesomeIcon icon={faPhone} size="2x" color="#112d4e" className="me-2" />
+                <strong>911000222</strong>
+            </p>
+            <p>No dudes en ponerte en contacto con nosotros, estaremos encantados de atenderte y resolver cualquier pregunta que tengas. Nuestro equipo está siempre disponible para ofrecerte el mejor servicio y garantizar que tu experiencia sea satisfactoria. ¡Llámanos ahora y hablemos sobre cómo podemos ayudarte!</p>
             </div>
+        </div>
+    </div>
+
 
             {/* Modal de selección de fechas */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>

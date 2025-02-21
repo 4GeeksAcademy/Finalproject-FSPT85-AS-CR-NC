@@ -84,7 +84,7 @@ export const Navbar = () => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Vehículos</a>
+                                <a className="nav-link dropdown-toggle" style={{ color: "#112d4e" }} href="#" data-bs-toggle="dropdown">Vehículos</a>
 								<ul className="dropdown-menu" data-bs-display="static">
                                 {Object.entries(gruposVehiculos).map(([categoria, lista]) => (
                                     lista.length > 0 && (
@@ -103,8 +103,8 @@ export const Navbar = () => {
                             ))}
                             </ul>
                             </li>
-                            <li className="nav-item"><a className="nav-link" href="#">Precios</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#">Contacto</a></li>
+                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#">Precios</a></li>
+                            <li className="nav-item"><a className="nav-link" style={{ color: "#112d4e" }} href="#">Contacto</a></li>
                         </ul>
                         {!store.isAuthenticated && (
                             <button

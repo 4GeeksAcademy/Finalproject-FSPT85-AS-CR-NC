@@ -73,6 +73,9 @@
 		]
 	},
 	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^6.7.2",
+		"@fortawesome/free-solid-svg-icons": "^6.7.2",
+		"@fortawesome/react-fontawesome": "^0.2.2",
 		"bootstrap": "^5.3.3",
 		"flask-cors": "^0.0.1",
 		"formik": "^2.4.6",
