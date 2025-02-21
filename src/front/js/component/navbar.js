@@ -45,7 +45,7 @@ export const Navbar = () => {
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}/api/vehicles`);
+                const response = await fetch(`${process.env.BACKEND_URL}api/vehicles`);
                 const data = await response.json();
                 setVehiculos(data);
             } catch (error) {

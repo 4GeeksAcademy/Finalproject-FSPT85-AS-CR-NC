@@ -44,7 +44,7 @@ export const Footer = () => {
 				try {
 					console.log("🔍 BACKEND_URL:", process.env.BACKEND_URL);  // ✅ Verifica el valor
 		
-					const response = await fetch(`${process.env.BACKEND_URL}/api/vehicles`);
+					const response = await fetch(`${process.env.BACKEND_URL}api/vehicles`);
 					const data = await response.json();
 					setVehiculos(data);
 				} catch (error) {
