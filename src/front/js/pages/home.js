@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
@@ -6,58 +6,19 @@ import * as Yup from "yup";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
 import "../../styles/home.css";
-import imagehome from "../../img/home.jpg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp, faTruckFast, faHouse, faPhone } from "@fortawesome/free-solid-svg-icons";
+import imagehome from "../../img/home.jpg"
+import ReactDOM from 'react-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faThumbsUp, faTruckFast, faHouse, faPhone } from '@fortawesome/free-solid-svg-icons'
+
 
 export const Home = () => {
     const { store } = useContext(Context);
     const primerostresVehiculos = store.vehicles.slice(0, 3);
 
-    const formik = useFormik({
-        initialValues: {
-            nombre: "",
-            email: "",
-            message: "Quisiera recibir más información sobre los alquileres."
-        },
-        validationSchema: Yup.object({
-            nombre: Yup.string().required("El nombre es obligatorio"),
-            email: Yup.string().email("Formato de correo no válido").required("El correo es obligatorio")
-        }),
-        onSubmit: (values, { resetForm }) => {
-            const templateParams = {
-                user_name: values.nombre,
-                user_email: values.email,
-                to_email: values.email, // Aseguramos que el destinatario recibe el correo
-                message: values.message
-            };
-
-            emailjs.send("service_d69rzc5", "template_268zlr7", templateParams, "znbda1wlH4IIiEjOY")
-                .then((response) => {
-                    console.log("SUCCESS!", response.status, response.text);
-                    Swal.fire({
-                        title: "¡Formulario enviado!",
-                        text: "Revisa tu correo electrónico para más información.",
-                        icon: "success",
-                        confirmButtonColor: "#112D4E"
-                    });
-                    resetForm();
-                })
-                .catch((error) => {
-                    console.error("FAILED...", error);
-                    Swal.fire({
-                        title: "Error",
-                        text: "Hubo un problema enviando el formulario. Inténtalo de nuevo.",
-                        icon: "error",
-                        confirmButtonColor: "#112D4E"
-                    });
-                });
-        }
-    });
-
-    return (
-        <div className="text-center">
-            <img src={imagehome} className="img-fluid" alt="..." />
+	return (
+		<div className="text-center">
+			<img src={imagehome} className="img-fluid" alt="..." />
             <h1 className="mt-3 mb-5 fs-3" style={{ color: "#112d4e" }}>Bienvenidos a @4Cars, tu alquiler fácil</h1>
             
             <h3 className="mt-5 mb-5 fs-4" style={{ color: "#112d4e" }}>Vehículos más populares</h3>
@@ -91,43 +52,25 @@ export const Home = () => {
             
             <div className="row mt-5 p-5" id="contacto" style={{ border: "2px solid #112d4e" }}>
                 <div className="col mx-5">
-                    <h5 className="card-title my-2" style={{ color: "#112d4e" }}>Más información</h5>
-                    <p className="py-3">Si tienes cualquier duda por favor deja tus datos y te escribiremos</p>
-                    <form onSubmit={formik.handleSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="nombre">Nombre</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="nombre"
-                                name="nombre"
-                                placeholder="Nombre completo"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.nombre}
-                            />
-                        </div>
-                        <div className="form-group mt-3">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                id="email_input"
-                                name="email"
-                                placeholder="Dirección de correo"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.email}
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-secondary btn-lg btn-block my-3" style={{ backgroundColor: "#112D4E", color: "white" }}>Enviar</button>
-                    </form>
+                <h5 className="card-title my-2" style={{ color: "#112d4e" }}>Más información</h5>
+                <p className="py-3">Si tienes cualquier duda por favor deja tus datos y te escribiremos</p>
+                <form>
+                    <div className="form-group">
+                        <label for="formGroupExampleInput">Nombre</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre completo" />
+                    </div>
+                    <div className="form-group">
+                        <label for="formGroupExampleInput2">Email</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Dirección de correo" />
+                    </div>
+                    <button type="submit" className="btn btn-secondary btn-lg btn-block my-3" style={{ backgroundColor: "#112D4E", color: "white" }}>Enviar</button>
+                </form>
                 </div>
                 <div className="col mx-5">
-                    <h5 className="card-title my-5" style={{ color: "#112d4e" }}>Llámanos</h5>
-                    <FontAwesomeIcon icon={faPhone} size="2x" color="#112d4e" />
-                    <h2 className="my-3" style={{ color: "#112d4e" }}>911000222</h2>
-                    <p>Te ofreceremos toda la información que necesites y te asesoraremos sobre las mejores opciones de alquiler para tus necesidades</p>
+                <h5 className="card-title my-5" style={{ color: "#112d4e" }}>Llámanos</h5>
+                <FontAwesomeIcon icon={faPhone} size="2x" color="#112d4e"/>
+                <h2 className="my-3" style={{ color: "#112d4e" }}>911000222</h2>
+                <p>Te ofreceremos toda la información que necesites y te asesoraremos sobre las mejores opciones de alquiler para tus necesidades</p>
                 </div>
             </div>
         </div>

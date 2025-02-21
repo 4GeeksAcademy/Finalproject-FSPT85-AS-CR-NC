@@ -61,3 +61,11 @@
     padding-top: 20px;
     border-top: 1px solid #eee;
 }
+
+.navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ccc;  
+}
