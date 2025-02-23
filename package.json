@@ -80,6 +80,7 @@
 		"emailjs-com": "^3.2.0",
 		"flask-cors": "^0.0.1",
 		"formik": "^2.4.6",
+		"logging": "^3.3.0",
 		"prop-types": "^15.6.1",
 		"react": "^16.8.4",
 		"react-bootstrap": "^2.10.9",
@@ -87,6 +88,7 @@
 		"react-dom": "^16.8.4",
 		"react-polyfills": "0.0.1",
 		"react-router-dom": "^6.3.0",
+		"requests": "^0.3.0",
 		"sweetalert2": "^11.17.2",
 		"yup": "^1.6.1"
 	}

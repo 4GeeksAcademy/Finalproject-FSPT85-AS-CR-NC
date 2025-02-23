@@ -25,9 +25,13 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            // ✅ NUEVA FUNCIÓN: OBTENER VEHÍCULO POR ID
             fetchVehicleById: async (vehicleId) => {
                 try {
+                    const store = getStore();
+
+                    // Evita el fetch si ya tenemos el vehículo correcto en el estado
+                    if (store.selectedVehicle && store.selectedVehicle.id === vehicleId) return;
+
                     const resp = await fetch(`${process.env.BACKEND_URL}/api/vehicles/${vehicleId}`);
                     
                     if (!resp.ok) {
