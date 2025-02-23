@@ -26,7 +26,7 @@ export const SingleVehicle = () => {
     },
   ]);
 
-  const isAuthenticated = store.user?.token; // Verifica si el usuario está autenticado
+  const isAuthenticated = store.isAuthenticated;
 
   useEffect(() => {
     actions.fetchVehicleById(id);

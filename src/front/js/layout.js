@@ -11,7 +11,7 @@ import { Condiciones } from "./pages/condiciones";
 import { PasswordReset } from "./pages/passwordReset";
 import { PasswordUpdate } from "./pages/passwordUpdate";
 import injectContext from "./store/appContext";
-import { AppNavbar } from "./component/AppNavbar"; // Importa el nuevo Navbar
+import { AppNavbar } from "./component/AppNavbar.jsx"; 
 import { Footer } from "./component/footer";
 
 const Layout = () => {
