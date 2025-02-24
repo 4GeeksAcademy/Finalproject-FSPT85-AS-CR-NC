@@ -65,7 +65,7 @@ export const PasswordUpdate = () => {
   });
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 vh-100">
       <h2>Actualizar Contraseña</h2>
       <form onSubmit={formik.handleSubmit}>
         <div className="mb-3">
