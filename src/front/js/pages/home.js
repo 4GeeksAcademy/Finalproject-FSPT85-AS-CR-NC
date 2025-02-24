@@ -9,10 +9,13 @@ import "../../styles/home.css";
 import imagehome from "../../img/home.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faTruckFast, faHouse, faPhone } from "@fortawesome/free-solid-svg-icons";
+import {Cloudinary} from "@cloudinary/url-gen";
 
 export const Home = () => {
   const { store } = useContext(Context);
   const primerostresVehiculos = store.vehicles.slice(0, 3);
+  const cloudinaryBaseURL = "https://res.cloudinary.com/dbqfhbhzu/image/upload/v1740346391/";
+
 
   const formik = useFormik({
     initialValues: {
@@ -101,9 +104,10 @@ export const Home = () => {
               </div>
               <div className="col-md-8">
                 <img
-                  src={vehicle.foto}
+                  src={`${cloudinaryBaseURL}${vehicle.id}.jpg`}
                   alt={`${vehicle.marca} ${vehicle.modelo}`}
                   className="card-img"
+                  onError={(e) => (e.target.src = "https://via.placeholder.com/300")}
                 />
               </div>
             </div>

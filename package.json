@@ -73,10 +73,13 @@
 		]
 	},
 	"dependencies": {
+		"@cloudinary/react": "^1.13.1",
+		"@cloudinary/url-gen": "^1.21.0",
 		"@fortawesome/fontawesome-svg-core": "^6.7.2",
 		"@fortawesome/free-solid-svg-icons": "^6.7.2",
 		"@fortawesome/react-fontawesome": "^0.2.2",
 		"bootstrap": "^5.3.3",
+		"cloudinary": "^2.5.1",
 		"emailjs-com": "^3.2.0",
 		"flask-cors": "^0.0.1",
 		"formik": "^2.4.6",

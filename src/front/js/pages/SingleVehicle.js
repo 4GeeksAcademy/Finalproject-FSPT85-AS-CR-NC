@@ -12,10 +12,12 @@ import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import {Cloudinary} from "@cloudinary/url-gen";
 
 export const SingleVehicle = () => {
   const { store, actions } = useContext(Context);
   const { id } = useParams();
+  console.log(id);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [dateRange, setDateRange] = useState([
@@ -27,6 +29,7 @@ export const SingleVehicle = () => {
   ]);
 
   const isAuthenticated = store.isAuthenticated;
+  
 
   useEffect(() => {
     actions.fetchVehicleById(id);
@@ -92,6 +95,8 @@ export const SingleVehicle = () => {
     descripcion
   } = store.selectedVehicle;
 
+  const cloudinaryBaseURL = "https://res.cloudinary.com/dbqfhbhzu/image/upload/v1740346391/";
+  const vehicle = store.vehicles;
 return ( 
   <div className="text-center mt-5">
     <h1>Vehicle Details</h1>
@@ -100,7 +105,7 @@ return (
     <div className="container mt-4">
       <img
         className="d-block w-100"
-        src="https://placehold.co/500x300"
+        src={`${cloudinaryBaseURL}${id}.jpg`}
         alt="Imagen principal"
       />
     </div>
