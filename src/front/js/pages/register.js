@@ -111,7 +111,7 @@ export const Register = () => {
     });
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 vh-100">
             <h2 className="text-center">Registro</h2>
             <p className="text-center">Regístrate aquí para acceder a todas las funciones de nuestra plataforma. Con una cuenta, podrás reservar vehículos fácilmente, recibir información personalizada y disfrutar de ofertas exclusivas. ¡Únete ahora y comienza tu viaje con nosotros! 🚗✨</p>
             <form onSubmit={formik.handleSubmit} className="w-50 mx-auto mb-5">

@@ -81,7 +81,7 @@ export const PasswordReset = () => {
   });
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 vh-100">
       <h2>Reiniciar Contraseña</h2>
       <p>Introduce tu correo electrónico para recibir un enlace de reinicio de contraseña.</p>
       <form onSubmit={formik.handleSubmit}>

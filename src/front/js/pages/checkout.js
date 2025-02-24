@@ -1,11 +1,16 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+// import {Cloudinary} from "@cloudinary/url-gen";
 
 export const Checkout = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { id } = useParams();
+    console.log(id);
+
     const { store } = useContext(Context);  // Accede al contexto para obtener los datos del usuario
 
     // Extraer datos de location.state
@@ -112,9 +117,10 @@ export const Checkout = () => {
             setLoading(false);
         }
     };
-
+    const cloudinaryBaseURL = "https://res.cloudinary.com/dbqfhbhzu/image/upload/v1740346391/";
+    const vehicle = store.vehicles;
     return (
-        <div className="text-center mt-5">
+        <div className="text-center my-5">
             <h1>DATOS DE TU RESERVA</h1>
             <p><strong>Fecha de Inicio:</strong> {startDate ? new Date(startDate).toLocaleDateString() : "No seleccionado"}</p>
             <p><strong>Fecha de Fin:</strong> {endDate ? new Date(endDate).toLocaleDateString() : "No seleccionado"}</p>
@@ -123,7 +129,7 @@ export const Checkout = () => {
             <h1>DATOS DEL VEHÍCULO</h1>
             {marca && modelo ? (
                 <div className="card" style={{ width: "18rem", margin: "auto" }}>
-                    <img src={foto} className="card-img-top" alt={`${marca} ${modelo}`} />
+                    <img src={`${cloudinaryBaseURL}${vehiculoId}.jpg`} className="card-img-top" alt={`${marca} ${modelo}`} />
                     <div className="card-body">
                         <h5 className="card-title">{`${marca} ${modelo}`}</h5>
                         <p className="card-text">
