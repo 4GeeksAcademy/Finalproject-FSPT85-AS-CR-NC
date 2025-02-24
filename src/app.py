@@ -80,7 +80,19 @@ def create_user():
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({"msg": "Usuario creado exitosamente"}), 201
+        return jsonify({"msg": "Usuario creado exitosamente",
+                        "usuario": {
+                "id": new_user.id,
+                "email": new_user.email,
+                "nombre": new_user.nombre,
+                "apellidos": new_user.apellidos,
+                "direccion": new_user.direccion,
+                "poblacion": new_user.poblacion,
+                "telefono": new_user.telefono,
+                "fecha_nacimiento": new_user.fecha_nacimiento.isoformat(),
+                "fecha_obtencion_carnet": new_user.fecha_obtencion_carnet.isoformat()
+            }
+            }), 201
 
     except IntegrityError as e:
         db.session.rollback()
