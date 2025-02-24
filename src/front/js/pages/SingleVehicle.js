@@ -145,13 +145,13 @@ return (
           <div className="card text-center p-3 w-100">
             <Carousel className="mb-3">
               <Carousel.Item>
-                <img className="d-block w-100" src="https://placehold.co/300x200" alt="Placeholder 1" />
+                <img className="d-block w-100" src={`${cloudinaryBaseURL}${id}-1.jpg`} alt="Placeholder 1" />
               </Carousel.Item>
               <Carousel.Item>
-                <img className="d-block w-100" src="https://placehold.co/300x200" alt="Placeholder 2" />
+                <img className="d-block w-100" src={`${cloudinaryBaseURL}${id}-2.jpg`} alt="Placeholder 2" />
               </Carousel.Item>
               <Carousel.Item>
-                <img className="d-block w-100" src="https://placehold.co/300x200" alt="Placeholder 3" />
+                <img className="d-block w-100" src={`${cloudinaryBaseURL}${id}-3.jpg`} alt="Placeholder 3" />
               </Carousel.Item>
             </Carousel>
             <h3 className="fw-bold">{precio_por_dia.toFixed(2)} € / día</h3>
