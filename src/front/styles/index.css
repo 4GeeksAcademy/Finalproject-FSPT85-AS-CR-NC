@@ -14,6 +14,18 @@
     margin-bottom: 15px;
 }
 
+.dropdown-menu {
+    position: absolute !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    z-index: 1050; 
+  }
+
+.no-underline {
+    text-decoration: none;
+  }  
+
 .footer-text {
     color: #6c757d;
     font-size: 0.9rem;
@@ -62,10 +74,11 @@
     border-top: 1px solid #eee;
 }
 
-.navbar-nav .nav-link {
-    color: white;
-}
-
-.navbar-nav .nav-link:hover {
-    color: #ccc;  
-}
+.nav-link-custom {
+    color: #112d4e; /* Negro */
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link-custom:hover {
+    color: #6c757d; /* Gris */
+  }  

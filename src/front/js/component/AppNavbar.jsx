@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Nav, Container, NavDropdown, Button, Modal, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import "../../styles/index.css";
 
 export const AppNavbar = () => {
   const { store, actions } = useContext(Context);
@@ -56,7 +57,7 @@ export const AppNavbar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <NavDropdown title="Vehículos" id="vehiculos-dropdown" className="fs-6">
+              <NavDropdown title="Vehículos" id="vehiculos-dropdown" className="fs-6 nav-link-custom">
                 {Object.entries(gruposVehiculos).map(([tipo, lista]) =>
                   lista.length > 0 ? (
                     <React.Fragment key={tipo}>
@@ -76,10 +77,10 @@ export const AppNavbar = () => {
                   ) : null
                 )}
               </NavDropdown>
-              <Nav.Link as={Link} to="/condiciones" style={{ color: "#112d4e" }} className="fs-6">
+              <Nav.Link as={Link} to="/condiciones" className="fs-6 nav-link-custom">
                 Condiciones
               </Nav.Link>
-              <Nav.Link as={Link} to="#contacto" style={{ color: "#112d4e" }} className="fs-6">
+              <Nav.Link as={Link} to="#contacto" className="fs-6 nav-link-custom">
                 Contacto
               </Nav.Link>
             </Nav>

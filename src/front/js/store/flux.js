@@ -61,8 +61,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                     });
 
                     const data = await response.json();
+                    console.log("Respuesta del backend:", data);
                     if (!response.ok) {
                         throw new Error(data.msg || "Error en el registro");
+                    }
+
+                    if (data.usuario) {
+                        setStore({
+                            isAuthenticated: true,
+                            usuario: data.usuario // Ahora, almacenas los datos del usuario en el contexto
+                        });
                     }
 
                     Swal.fire({
@@ -99,7 +107,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
 
                     localStorage.setItem("token", data.access_token);
-                    setStore({ isAuthenticated: true });
+                    setStore({ isAuthenticated: true, usuario: data.usuario });
 
                     Swal.fire({
                         title: "Inicio de sesión exitoso",
