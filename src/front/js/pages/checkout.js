@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
+// import {Cloudinary} from "@cloudinary/url-gen";
+import "../../styles/checkout.css";
 
 export const Checkout = () => {
     const location = useLocation();
@@ -143,7 +145,8 @@ const sendConfirmationEmail = () => {
     };
 
     return (
-        <div className="text-center my-5">
+    <div className="checkout-container">    
+        <div className="text-center mt-5">
             <h1>DATOS DE TU RESERVA</h1>
             <p><strong>Fecha de Inicio:</strong> {startDate ? new Date(startDate).toLocaleDateString() : "No seleccionado"}</p>
             <p><strong>Fecha de Fin:</strong> {endDate ? new Date(endDate).toLocaleDateString() : "No seleccionado"}</p>
@@ -194,5 +197,6 @@ const sendConfirmationEmail = () => {
                 </button>
             </div>
         </div>
+    </div>
     );
 };
