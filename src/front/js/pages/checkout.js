@@ -164,7 +164,7 @@ export const Checkout = () => {
             <div className="d-flex justify-content-center mt-4">
                 <button className="btn btn-danger me-3" onClick={() => navigate("/")}>Cancelar</button>
                 <button className="btn btn-success" onClick={handleConfirm} disabled={loading}>
-                    {loading ? "Procesando..." : "CONFIRMAR ✅"}
+                    {loading ? "Procesando..." : "CONFIRMAR"}
                 </button>
             </div>
         </div>

@@ -1,4 +1,6 @@
 import Swal from "sweetalert2";
+import React, { useContext } from "react";
+import { Context } from "../store/appContext";
 
 const getState = ({ getStore, getActions, setStore }) => {
     return {
@@ -111,11 +113,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                     Swal.fire({
                         title: "Inicio de sesión exitoso",
-                        text: "Bienvenido de nuevo",
+                        text: `Bienvenido de nuev@, ${data.usuario.nombre}!`,
                         icon: "success",
-                        confirmButtonText: "OK"
+                        confirmButtonText: "OK",
+                        confirmButtonColor: "#112D4E"
                     });
-
+                      
                     return true;
                 } catch (error) {
                     Swal.fire({
@@ -136,7 +139,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                     title: "Sesión cerrada",
                     text: "Has cerrado sesión exitosamente",
                     icon: "info",
-                    confirmButtonText: "OK"
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#112D4E"
                 });
             },
 

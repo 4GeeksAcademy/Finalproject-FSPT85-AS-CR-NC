@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Nav, Container, NavDropdown, Button, Modal, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import Swal from "sweetalert2";
 import "../../styles/index.css";
 
 export const AppNavbar = () => {
@@ -47,6 +48,23 @@ export const AppNavbar = () => {
     }
   };
 
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Cerrar sesión",
+      text: "¿Estás seguro que deseas cerrar sesión?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#112D4E",
+      cancelButtonColor: "#d33"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        actions.logoutUser();
+      }
+    });
+  };
+
   return (
     <>
       <Navbar bg="light" expand="lg" className="w-100">
@@ -85,7 +103,7 @@ export const AppNavbar = () => {
               </Nav.Link>
             </Nav>
             {store.isAuthenticated ? (
-              <Button variant="danger" onClick={() => actions.logoutUser()} className="fs-6">
+              <Button variant="danger" onClick={handleLogout} className="fs-6">
                 Logout
               </Button>
             ) : (

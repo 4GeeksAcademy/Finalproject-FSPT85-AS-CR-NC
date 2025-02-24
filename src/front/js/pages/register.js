@@ -101,7 +101,8 @@ export const Register = () => {
                     title: "Registro Exitoso",
                     text: "Tu cuenta ha sido creada correctamente. Revisa tu email para confirmar tu cuenta.",
                     icon: "success",
-                    confirmButtonText: "OK"
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#112D4E"
                 }).then(() => {
                     navigate("/");
                 });
