@@ -3,30 +3,61 @@ import { Context } from "../store/appContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-// import {Cloudinary} from "@cloudinary/url-gen";
+import emailjs from "emailjs-com";
 
 export const Checkout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = useParams();
-    console.log(id);
 
-    const { store } = useContext(Context);  // Accede al contexto para obtener los datos del usuario
+    const { store } = useContext(Context);  
 
-    // Extraer datos de location.state
-    const { startDate, endDate, id: vehiculoId, marca, modelo, foto, precio_por_dia } = location.state || {};
+    const { startDate, endDate, id: vehiculoId, marca, modelo, precio_por_dia } = location.state || {};
+    const { nombre, apellidos, telefono, email } = store.usuario || {};
 
     const [insurance, setInsurance] = useState(false);
     const [loading, setLoading] = useState(false); 
 
     const insuranceCostPerDay = 3;
-    const totalDays = startDate && endDate ? Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)) : 0;
+    const totalDays = startDate && endDate 
+        ? Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)) 
+        : 0;
     const baseTotal = totalDays > 0 && precio_por_dia ? totalDays * precio_por_dia : 0;
     const insuranceTotal = insurance ? totalDays * insuranceCostPerDay : 0;
     const finalTotal = baseTotal + insuranceTotal;
 
-    // Datos del usuario desde el contexto
-    const { nombre, apellidos, direccion, poblacion, telefono, fecha_nacimiento } = store.usuario || {};
+
+    // **Función para enviar email de confirmación**
+const sendConfirmationEmail = () => {
+    if (!email) {
+        console.error("Error: No se encontró un email válido para enviar.");
+        return;
+    }
+
+    console.log("📧 Enviando email de confirmación a:", email);
+
+    const emailParams = {
+        to_name: nombre,
+        to_email: email,  
+        reserva_display: "block",
+        bienvenida_display: "none",
+        marca,
+        modelo,
+        fecha_inicio: new Date(startDate).toLocaleDateString(),
+        fecha_fin: new Date(endDate).toLocaleDateString(),
+        telefono_usuario: telefono,
+        finalTotal: finalTotal.toFixed(2),
+    };
+
+    emailjs.send("service_d69rzc5", "template_268zlr7", emailParams, "znbda1wlH4IIiEjOY")
+        .then(() => {
+            console.log("✅ Email de confirmación enviado con éxito.");
+        })
+        .catch(error => {
+            console.error("❌ Error al enviar el email de confirmación:", error);
+        });
+};
+
 
     const handleConfirm = async () => {
         if (!startDate || !endDate || !vehiculoId) {
@@ -39,13 +70,12 @@ export const Checkout = () => {
             return;
         }
 
-        // Confirmación con SweetAlert2
         const confirmResult = await Swal.fire({
             title: "¿Confirmar reserva?",
             text: `Reservarás un ${marca} ${modelo} del ${new Date(startDate).toLocaleDateString()} al ${new Date(endDate).toLocaleDateString()}.`,
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#28a745",
+            confirmButtonColor: "#112D4E",
             cancelButtonColor: "#d33",
             confirmButtonText: "Sí, confirmar",
             cancelButtonText: "Cancelar"
@@ -55,7 +85,6 @@ export const Checkout = () => {
 
         setLoading(true);
 
-        // Convertir las fechas a formato ISO 8601 sin la "Z" al final
         const fechaInicio = new Date(startDate).toISOString().split(".")[0];
         const fechaFin = new Date(endDate).toISOString().split(".")[0];
 
@@ -63,18 +92,12 @@ export const Checkout = () => {
             fecha_inicio: fechaInicio,
             fecha_fin: fechaFin,
             vehiculo_id: Number(vehiculoId),
-            usuario_id: store.usuario?.id, // Agregar el ID del usuario
-            nombre_usuario: `${nombre} ${apellidos}`, // Nombre completo del usuario
-            direccion_usuario: direccion,
-            poblacion_usuario: poblacion,
+            usuario_id: store.usuario?.id,
+            nombre_usuario: `${nombre} ${apellidos}`,
             telefono_usuario: telefono,
-            fecha_nacimiento_usuario: fecha_nacimiento
         };
 
-        console.log("📢 Datos enviados al backend:", reservationData);
-
         try {
-            // Mostrar loader mientras se procesa la reserva
             Swal.fire({
                 title: "Procesando reserva...",
                 text: "Por favor, espera un momento.",
@@ -96,15 +119,16 @@ export const Checkout = () => {
                 throw new Error(`Error en la reserva. Código: ${response.status}`);
             }
 
-            const data = await response.json();
-            console.log("Reserva creada:", data);
+            sendConfirmationEmail();
 
             Swal.fire({
-                title: "Reserva confirmada ✅",
+                title: "Reserva confirmada",
                 text: `Tu reserva del ${marca} ${modelo} ha sido confirmada del ${new Date(startDate).toLocaleDateString()} al ${new Date(endDate).toLocaleDateString()}.`,
                 icon: "success",
-                confirmButtonText: "OK"
-            }).then(() => navigate("/")); // Redirige al usuario tras confirmar
+                confirmButtonText: "OK",
+                confirmButtonColor: "#112D4E"
+            }).then(() => navigate("/"));
+
         } catch (error) {
             console.error("Error al crear la reserva:", error);
             Swal.fire({
@@ -117,8 +141,7 @@ export const Checkout = () => {
             setLoading(false);
         }
     };
-    const cloudinaryBaseURL = "https://res.cloudinary.com/dbqfhbhzu/image/upload/v1740346391/";
-    const vehicle = store.vehicles;
+
     return (
         <div className="text-center my-5">
             <h1>DATOS DE TU RESERVA</h1>
@@ -129,7 +152,7 @@ export const Checkout = () => {
             <h1>DATOS DEL VEHÍCULO</h1>
             {marca && modelo ? (
                 <div className="card" style={{ width: "18rem", margin: "auto" }}>
-                    <img src={`${cloudinaryBaseURL}${vehiculoId}.jpg`} className="card-img-top" alt={`${marca} ${modelo}`} />
+                    <img src={`https://res.cloudinary.com/dbqfhbhzu/image/upload/v1740346391/${vehiculoId}.jpg`} className="card-img-top" alt={`${marca} ${modelo}`} />
                     <div className="card-body">
                         <h5 className="card-title">{`${marca} ${modelo}`}</h5>
                         <p className="card-text">
@@ -145,10 +168,7 @@ export const Checkout = () => {
             {nombre && apellidos ? (
                 <div>
                     <p><strong>Nombre:</strong> {nombre} {apellidos}</p>
-                    <p><strong>Dirección:</strong> {direccion}</p>
-                    <p><strong>Población:</strong> {poblacion}</p>
                     <p><strong>Teléfono:</strong> {telefono}</p>
-                    <p><strong>Fecha de Nacimiento:</strong> {new Date(fecha_nacimiento).toLocaleDateString()}</p>
                 </div>
             ) : (
                 <p>No se han encontrado datos del usuario.</p>

@@ -8,8 +8,7 @@ import emailjs from "emailjs-com";
 import "../../styles/home.css";
 import imagehome from "../../img/home.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp, faTruckFast, faHouse, faPhone } from "@fortawesome/free-solid-svg-icons";
-import { Cloudinary } from "@cloudinary/url-gen";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
 
 export const Home = () => {
   const { store } = useContext(Context);
@@ -31,11 +30,14 @@ export const Home = () => {
         user_name: values.nombre,
         user_email: values.email,
         to_email: values.email,
-        message: values.message
+        message: values.message,
+        reset_display: "none",   // 🔹 Oculta la sección de reseteo de contraseña
+        info_display: "block"    // 🔹 Muestra solo la parte de "Información de 4Cars"
       };
 
-      emailjs
-        .send("service_d69rzc5", "template_268zlr7", templateParams, "znbda1wlH4IIiEjOY")
+      console.log("📧 Enviando EmailJS con estos parámetros:", templateParams); // Debugging
+
+      emailjs.send("service_d69rzc5", "template_aqy6q17", templateParams, "znbda1wlH4IIiEjOY")
         .then(() => {
           Swal.fire({
             title: "¡Formulario enviado!",

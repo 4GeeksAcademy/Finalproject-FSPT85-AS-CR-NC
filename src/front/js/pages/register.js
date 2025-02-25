@@ -11,23 +11,25 @@ export const Register = () => {
     const { actions } = useContext(Context);
     const navigate = useNavigate();
 
-    const sendConfirmationEmail = (email, name) => {
+    const sendWelcomeEmail = (email, name) => {
         const templateParams = {
             to_email: email,
             to_name: name,
+            bienvenida_display: "block", 
+            reserva_display: "none"      
         };
 
         emailjs.send(
             "service_d69rzc5",
-            "template_aqy6q17",
+            "template_268zlr7", 
             templateParams,
             "znbda1wlH4IIiEjOY"
         ).then(
             (response) => {
-                console.log("Email enviado con éxito", response.status, response.text);
+                console.log("Email de bienvenida enviado con éxito", response.status, response.text);
             },
             (error) => {
-                console.error("Error al enviar el email", error);
+                console.error("Error al enviar el email de bienvenida", error);
             }
         );
     };
@@ -95,7 +97,7 @@ export const Register = () => {
         onSubmit: async (values) => {
             const success = await actions.registerUser(values);
             if (success) {
-                sendConfirmationEmail(values.email, values.nombre);
+                sendWelcomeEmail(values.email, values.nombre);
                 formik.resetForm();
                 Swal.fire({
                     title: "Registro Exitoso",

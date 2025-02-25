@@ -22,10 +22,13 @@ export const Condiciones = () => {
                 user_name: values.nombre,
                 user_email: values.email,
                 to_email: values.email,
-                message: values.message
+                message: values.message,
+                reset_display: "none",   // 🔹 Oculta la sección de reseteo de contraseña
+                info_display: "block"    // 🔹 Muestra solo la parte de "Información de 4Cars"
             };
 
-            emailjs.send("service_d69rzc5", "template_268zlr7", templateParams, "znbda1wlH4IIiEjOY")
+            emailjs.send("service_d69rzc5", "template_aqy6q17", templateParams, "znbda1wlH4IIiEjOY")
+
                 .then(() => {
                     Swal.fire({
                         title: "¡Formulario enviado!",
@@ -84,6 +87,7 @@ export const Condiciones = () => {
                 </div>
             </div>
             
+            {/* 🔹 SECCIÓN DE FORMULARIO PARA SOLICITAR INFORMACIÓN */}
             <div className="row mt-5 p-5" id="contacto" style={{ border: "2px solid #112d4e" }}>
                 <div className="col mx-5">
                     <h5 className="card-title my-2" style={{ color: "#112d4e" }}>Más información</h5>
@@ -101,6 +105,9 @@ export const Condiciones = () => {
                                 onBlur={formik.handleBlur}
                                 value={formik.values.nombre}
                             />
+                            {formik.touched.nombre && formik.errors.nombre ? (
+                                <div className="text-danger">{formik.errors.nombre}</div>
+                            ) : null}
                         </div>
                         <div className="form-group mt-3">
                             <label htmlFor="email">Email</label>
@@ -114,10 +121,15 @@ export const Condiciones = () => {
                                 onBlur={formik.handleBlur}
                                 value={formik.values.email}
                             />
+                            {formik.touched.email && formik.errors.email ? (
+                                <div className="text-danger">{formik.errors.email}</div>
+                            ) : null}
                         </div>
                         <button type="submit" className="btn btn-secondary btn-lg btn-block my-3" style={{ backgroundColor: "#112D4E", color: "white" }}>Enviar</button>
                     </form>
                 </div>
+                
+                {/* 🔹 SECCIÓN DE CONTACTO TELEFÓNICO */}
                 <div className="col mx-5">
                     <h5 className="card-title my-5" style={{ color: "#112d4e" }}>Llámanos</h5>
                     <FontAwesomeIcon icon={faPhone} size="2x" color="#112d4e" />
