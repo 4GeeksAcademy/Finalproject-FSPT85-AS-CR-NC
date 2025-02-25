@@ -2,17 +2,23 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Nav, Container, NavDropdown, Button, Modal, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import Swal from "sweetalert2";
 import "../../styles/index.css";
 
 export const AppNavbar = () => {
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
 
+  // Estados para login
   const [vehiculos, setVehiculos] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // Estados para el buscador
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -27,10 +33,34 @@ export const AppNavbar = () => {
     fetchVehicles();
   }, []);
 
+  // Agrupar vehículos (según algún criterio, aquí se mantiene lo que ya tenías)
   const gruposVehiculos = {
     "Turismos": vehiculos.filter((v) => v.precio_por_dia === 35),
     "Sedán/Berlinas": vehiculos.filter((v) => v.precio_por_dia === 40),
     "Furgonetas": vehiculos.filter((v) => v.precio_por_dia === 45),
+  };
+
+  // Manejo de búsqueda: filtra por aquellos vehículos cuya marca o modelo inician con el término
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    if (term.trim() !== "") {
+      const filtered = vehiculos.filter(
+        (vehiculo) =>
+          vehiculo.marca.toLowerCase().startsWith(term.toLowerCase()) ||
+          vehiculo.modelo.toLowerCase().startsWith(term.toLowerCase())
+      );
+      setSuggestions(filtered);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  // Al hacer clic en una sugerencia, limpia la búsqueda y navega a la página del vehículo
+  const handleSuggestionClick = (vehiculo) => {
+    setSearchTerm("");
+    setSuggestions([]);
+    navigate(`/vehicle/${vehiculo.id}`);
   };
 
   const handleAuth = async (e) => {
@@ -45,6 +75,23 @@ export const AppNavbar = () => {
     } else {
       setErrorMessage("Error en el login");
     }
+  };
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Cerrar sesión",
+      text: "¿Estás seguro que deseas cerrar sesión?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#d112D4E"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        actions.logoutUser();
+      }
+    });
   };
 
   return (
@@ -84,8 +131,50 @@ export const AppNavbar = () => {
                 Contacto
               </Nav.Link>
             </Nav>
+            {/* Barra de búsqueda */}
+            <Form className="d-flex position-relative me-3">
+              <Form.Control
+                type="search"
+                placeholder="Buscar por marca o modelo"
+                className="me-2"
+                aria-label="Buscar"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                style={{ width: "400px" }}
+              />
+              {/* Lista de sugerencias */}
+              {suggestions.length > 0 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "38px",
+                    left: 0,
+                    right: 0,
+                    background: "#fff",
+                    border: "1px solid #ccc",
+                    zIndex: 1000,
+                    maxHeight: "200px",
+                    overflowY: "auto"
+                  }}
+                >
+                  {suggestions.map((vehiculo) => (
+                    <div
+                      key={vehiculo.id}
+                      onClick={() => handleSuggestionClick(vehiculo)}
+                      style={{
+                        padding: "5px 10px",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #eee"
+                      }}
+                    >
+                      {vehiculo.marca} {vehiculo.modelo}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Form>
             {store.isAuthenticated ? (
-              <Button variant="danger" onClick={() => actions.logoutUser()} className="fs-6">
+              <Button variant="danger" onClick={handleLogout} className="fs-6">
                 Logout
               </Button>
             ) : (

@@ -127,7 +127,21 @@ def login():
             return response, 401
 
         access_token = create_access_token(identity=str(user.id))
-        response = jsonify({"msg": "Login successful", "access_token": access_token})
+        response = jsonify({
+            "msg": "Login successful",
+            "access_token": access_token,
+            "usuario": {
+                "id": user.id,
+                "email": user.email,
+                "nombre": user.nombre,
+                "apellidos": user.apellidos,
+                "direccion": user.direccion,
+                "poblacion": user.poblacion,
+                "telefono": user.telefono,
+                "fecha_nacimiento": user.fecha_nacimiento.isoformat(),
+                "fecha_obtencion_carnet": user.fecha_obtencion_carnet.isoformat()
+            }
+        })
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response, 200
     except Exception as e:

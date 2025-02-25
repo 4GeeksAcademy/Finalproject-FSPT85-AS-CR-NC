@@ -9,13 +9,12 @@ import "../../styles/home.css";
 import imagehome from "../../img/home.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faTruckFast, faHouse, faPhone } from "@fortawesome/free-solid-svg-icons";
-import {Cloudinary} from "@cloudinary/url-gen";
+import { Cloudinary } from "@cloudinary/url-gen";
 
 export const Home = () => {
   const { store } = useContext(Context);
   const primerostresVehiculos = store.vehicles.slice(0, 3);
   const cloudinaryBaseURL = "https://res.cloudinary.com/dbqfhbhzu/image/upload/v1740346391/";
-
 
   const formik = useFormik({
     initialValues: {
@@ -61,7 +60,9 @@ export const Home = () => {
     <div className="text-center">
       <img src={imagehome} className="img-fluid" alt="..." />
       <h1 className="mt-3 mb-5 fs-3" style={{ color: "#112d4e" }}>
-        Bienvenidos a @4Cars, tu alquiler fácil
+        {store.isAuthenticated && store.usuario
+          ? `Bienvenido de nuevo, ${store.usuario.nombre}!`
+          : "Bienvenidos a @4Cars, tu alquiler fácil"}
       </h1>
 
       <h3 className="mt-5 mb-5 fs-4" style={{ color: "#112d4e" }}>
