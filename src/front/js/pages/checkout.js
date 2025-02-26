@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
+// import {Cloudinary} from "@cloudinary/url-gen";
+import "../../styles/checkout.css";
 
 export const Checkout = () => {
     const location = useLocation();
@@ -13,7 +15,7 @@ export const Checkout = () => {
     const { store } = useContext(Context);  
 
     const { startDate, endDate, id: vehiculoId, marca, modelo, precio_por_dia } = location.state || {};
-    const { nombre, apellidos, telefono, email } = store.usuario || {};
+    const { nombre, apellidos, telefono, poblacion, email, fecha_nacimiento, fecha_obtencion_carnet, direccion} = store.usuario || {};
 
     const [insurance, setInsurance] = useState(false);
     const [loading, setLoading] = useState(false); 
@@ -95,6 +97,10 @@ const sendConfirmationEmail = () => {
             usuario_id: store.usuario?.id,
             nombre_usuario: `${nombre} ${apellidos}`,
             telefono_usuario: telefono,
+            poblacion: `${poblacion}`,
+            fecha_nacimiento: fecha_nacimiento,
+            fecha_obtencion_carnet: fecha_obtencion_carnet,
+            direccion: `${direccion}`
         };
 
         try {
@@ -143,7 +149,8 @@ const sendConfirmationEmail = () => {
     };
 
     return (
-        <div className="text-center my-5">
+    <div className="checkout-container">    
+        <div className="text-center mt-5">
             <h1>DATOS DE TU RESERVA</h1>
             <p><strong>Fecha de Inicio:</strong> {startDate ? new Date(startDate).toLocaleDateString() : "No seleccionado"}</p>
             <p><strong>Fecha de Fin:</strong> {endDate ? new Date(endDate).toLocaleDateString() : "No seleccionado"}</p>
@@ -169,19 +176,23 @@ const sendConfirmationEmail = () => {
                 <div>
                     <p><strong>Nombre:</strong> {nombre} {apellidos}</p>
                     <p><strong>Teléfono:</strong> {telefono}</p>
+                    <p><strong>Fecha de nacimiento:</strong> {fecha_nacimiento ? fecha_nacimiento.split("T")[0] : "No disponible"}</p>
+                    <p><strong>Fecha de obtención del carnet:</strong> {fecha_obtencion_carnet ? fecha_obtencion_carnet.split("T")[0] : "No disponible"}</p>
+                    <p><strong>Población:</strong> {poblacion}</p>
+                    <p><strong>Dirección:</strong> {direccion}</p>             
                 </div>
             ) : (
                 <p>No se han encontrado datos del usuario.</p>
             )}
 
-            <div className="mt-3">
+            <div className="insurance-section">
                 <input 
                     type="checkbox" 
                     id="insurance" 
                     checked={insurance} 
                     onChange={() => setInsurance(!insurance)} 
                 />
-                <label htmlFor="insurance" className="ms-2">¿Desea añadir un seguro adicional? (+3€/día)</label>
+                <label htmlFor="insurance" className="ms-2"><strong>¿Desea añadir un seguro adicional? (+3€/día)</strong></label>
             </div>
             
             <h2 className="mt-4" style={{ fontSize: '1.8rem' }}>PRECIO TOTAL DE TU RESERVA</h2>
@@ -194,5 +205,6 @@ const sendConfirmationEmail = () => {
                 </button>
             </div>
         </div>
+    </div>
     );
 };

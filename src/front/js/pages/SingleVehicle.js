@@ -170,7 +170,7 @@ export const SingleVehicle = () => {
               <h3 className="fw-bold">{precio_por_dia.toFixed(2)} € / día</h3>
               <Button
                 variant="primary"
-                className="mt-2 w-100"
+                className="mt-2 w-100 custom-reserva-btn"
                 onClick={handleOpenModal}
               >
                 Reserva ya
