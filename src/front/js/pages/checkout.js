@@ -176,8 +176,8 @@ const sendConfirmationEmail = () => {
                 <div>
                     <p><strong>Nombre:</strong> {nombre} {apellidos}</p>
                     <p><strong>Teléfono:</strong> {telefono}</p>
-                    <p><strong>Fecha de nacimiento:</strong> {fecha_nacimiento}</p>
-                    <p><strong>Fecha de obtención del carnet:</strong> {fecha_obtencion_carnet}</p>
+                    <p><strong>Fecha de nacimiento:</strong> {fecha_nacimiento ? fecha_nacimiento.split("T")[0] : "No disponible"}</p>
+                    <p><strong>Fecha de obtención del carnet:</strong> {fecha_obtencion_carnet ? fecha_obtencion_carnet.split("T")[0] : "No disponible"}</p>
                     <p><strong>Población:</strong> {poblacion}</p>
                     <p><strong>Dirección:</strong> {direccion}</p>             
                 </div>
