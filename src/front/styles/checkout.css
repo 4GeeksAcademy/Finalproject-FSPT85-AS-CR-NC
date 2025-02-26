@@ -38,3 +38,11 @@
     gap: 15px;
     margin-top: 20px;
 }
+
+.insurance-section {
+    background-color: #b0c4de; /* Un gris azulado oscuro */
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+}

@@ -86,7 +86,7 @@ export const AppNavbar = () => {
       confirmButtonText: "Sí, cerrar sesión",
       cancelButtonText: "Cancelar",
       confirmButtonColor: "#d33",
-      cancelButtonColor: "#d112D4E"
+      cancelButtonColor: "#d1d2d4"
     }).then((result) => {
       if (result.isConfirmed) {
         actions.logoutUser();
@@ -179,10 +179,10 @@ export const AppNavbar = () => {
               </Button>
             ) : (
               <>
-                <Button variant="primary" onClick={() => navigate("/register")} className="me-2 fs-6">
+                <Button variant="primary" onClick={() => navigate("/register")} className="me-2 fs-6 custom-reserva-btn">
                   Signup
                 </Button>
-                <Button variant="primary" onClick={() => setShowLoginModal(true)} className="fs-6">
+                <Button variant="primary" onClick={() => setShowLoginModal(true)} className="fs-6 custom-reserva-btn">
                   Login
                 </Button>
               </>

@@ -15,7 +15,7 @@ export const Checkout = () => {
     const { store } = useContext(Context);  
 
     const { startDate, endDate, id: vehiculoId, marca, modelo, precio_por_dia } = location.state || {};
-    const { nombre, apellidos, telefono, email } = store.usuario || {};
+    const { nombre, apellidos, telefono, poblacion, email, fecha_nacimiento, fecha_obtencion_carnet, direccion} = store.usuario || {};
 
     const [insurance, setInsurance] = useState(false);
     const [loading, setLoading] = useState(false); 
@@ -97,6 +97,10 @@ const sendConfirmationEmail = () => {
             usuario_id: store.usuario?.id,
             nombre_usuario: `${nombre} ${apellidos}`,
             telefono_usuario: telefono,
+            poblacion: `${poblacion}`,
+            fecha_nacimiento: fecha_nacimiento,
+            fecha_obtencion_carnet: fecha_obtencion_carnet,
+            direccion: `${direccion}`
         };
 
         try {
@@ -172,19 +176,23 @@ const sendConfirmationEmail = () => {
                 <div>
                     <p><strong>Nombre:</strong> {nombre} {apellidos}</p>
                     <p><strong>Teléfono:</strong> {telefono}</p>
+                    <p><strong>Fecha de nacimiento:</strong> {fecha_nacimiento}</p>
+                    <p><strong>Fecha de obtención del carnet:</strong> {fecha_obtencion_carnet}</p>
+                    <p><strong>Población:</strong> {poblacion}</p>
+                    <p><strong>Dirección:</strong> {direccion}</p>             
                 </div>
             ) : (
                 <p>No se han encontrado datos del usuario.</p>
             )}
 
-            <div className="mt-3">
+            <div className="insurance-section">
                 <input 
                     type="checkbox" 
                     id="insurance" 
                     checked={insurance} 
                     onChange={() => setInsurance(!insurance)} 
                 />
-                <label htmlFor="insurance" className="ms-2">¿Desea añadir un seguro adicional? (+3€/día)</label>
+                <label htmlFor="insurance" className="ms-2"><strong>¿Desea añadir un seguro adicional? (+3€/día)</strong></label>
             </div>
             
             <h2 className="mt-4" style={{ fontSize: '1.8rem' }}>PRECIO TOTAL DE TU RESERVA</h2>
