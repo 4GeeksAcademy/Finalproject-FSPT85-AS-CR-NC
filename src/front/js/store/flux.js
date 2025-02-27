@@ -56,7 +56,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             registerUser: async (userData) => {
                 try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/signup`, {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/signup`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(userData)
@@ -96,7 +96,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             loginUser: async (email, contraseña) => {
                 try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/login`, {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ email, contraseña }),
