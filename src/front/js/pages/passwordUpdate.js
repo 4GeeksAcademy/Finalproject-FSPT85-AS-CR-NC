@@ -28,7 +28,7 @@ export const PasswordUpdate = () => {
     onSubmit: async (values) => {
       try {
         const response = await fetch(`${process.env.BACKEND_URL}/api/update-password`, {
-          method: "POST",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             token,

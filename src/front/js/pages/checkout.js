@@ -113,7 +113,7 @@ const sendConfirmationEmail = () => {
                 }
             });
 
-            const response = await fetch(`${process.env.BACKEND_URL}/create-reservation`, {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/create-reservation`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
