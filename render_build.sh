@@ -10,6 +10,5 @@ cd ../..
 pipenv install
 
 pipenv run flask insert-test-vehiculos
-pipenv run flask insert-test-reservas
 pipenv run migrate
 pipenv run upgrade
